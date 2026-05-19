@@ -2,7 +2,7 @@ package com.joboffersapi.domain.userCRUD;
 
 import org.junit.jupiter.api.Test;
 
-class userFacadeTest {
+class UserFacadeTest {
 
     @Test
     void f1() {

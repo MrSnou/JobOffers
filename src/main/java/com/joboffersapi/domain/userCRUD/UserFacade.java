@@ -1,4 +1,4 @@
 package com.joboffersapi.domain.userCRUD;
 
-class userFacade {
+class UserFacade {
 }
