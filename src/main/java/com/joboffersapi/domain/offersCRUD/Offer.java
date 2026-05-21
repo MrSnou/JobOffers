@@ -18,7 +18,7 @@ import java.net.URL;
 class Offer extends BaseEntity {
 
     @MongoId(value = FieldType.OBJECT_ID)
-    private Long  id;
+    private Long id;
     @Field("title")
     private String title;
     @Field("description")
