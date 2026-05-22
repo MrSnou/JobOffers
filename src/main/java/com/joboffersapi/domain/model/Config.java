@@ -1,11 +1,11 @@
-package com.joboffersapi.domain.offersCRUD.model;
+package com.joboffersapi.domain.model;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-class Config {
+public class Config {
 
     @Bean
     public RestTemplate restTemplate() {

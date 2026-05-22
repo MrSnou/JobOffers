@@ -5,9 +5,8 @@ import org.springframework.web.client.RestTemplate;
 class OfferFacadeConfiguration {
 
     public static  OfferFacade getOfferFacadeForTests(OfferRepository offerRepository, RestTemplate restTemplate) {
-        OfferReceiver offerService = new OfferReceiver(offerRepository);
-        OfferAdder offerAdder = new OfferAdder(offerRepository);
+        OfferService offerAdder = new OfferService(offerRepository);
         OfferFetcher offerFetcher = new OfferFetcher(restTemplate, offerRepository);
-        return new OfferFacade(offerService, offerAdder, offerFetcher);
+        return new OfferFacade( offerAdder, offerFetcher);
     }
 }

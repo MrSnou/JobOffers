@@ -1,6 +1,6 @@
 package com.joboffersapi.domain.offersCRUD;
 
-import com.joboffersapi.domain.offersCRUD.model.BaseEntity;
+import com.joboffersapi.domain.model.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

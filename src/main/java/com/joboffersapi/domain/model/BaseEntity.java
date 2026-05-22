@@ -1,4 +1,4 @@
-package com.joboffersapi.domain.offersCRUD.model;
+package com.joboffersapi.domain.model;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;

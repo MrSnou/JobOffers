@@ -1,11 +1,5 @@
 package com.joboffersapi.domain.offersCRUD;
 
-/*
-
-
-
- */
-
 import com.joboffersapi.domain.offersCRUD.dto.AddOfferRequestDto;
 import com.joboffersapi.domain.offersCRUD.dto.OfferDto;
 import com.joboffersapi.domain.offersCRUD.dto.OfferResponseDto;
