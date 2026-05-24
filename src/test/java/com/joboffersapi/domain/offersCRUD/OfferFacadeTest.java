@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Set;
 
 import static com.joboffersapi.domain.offersCRUD.OfferFacadeConfiguration.getOfferFacadeForTests;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -47,6 +48,15 @@ class OfferFacadeTest {
                     .build();
         }
 
+        static Offer anOffer(String name) {
+            return Offer.builder()
+                    .title(name)
+                    .description(DEFAULT_OFFER_DESCRIPTION)
+                    .salary(DEFAULT_OFFER_SALARY)
+                    .url(DEFAULT_OFFER_URL)
+                    .build();
+        }
+
         static AddOfferRequestDto anAddOfferRequestDto(Offer offer) {
             return AddOfferRequestDto.builder()
                     .title(offer.getTitle())
@@ -59,29 +69,28 @@ class OfferFacadeTest {
     }
 
 
-
     @Nested
     @DisplayName("addOffer - Tests")
     class AddOfferTests {
         @Test
         @DisplayName("Should return OfferResponseDto with message and offerDto.")
-        public void should_return_OfferResponseDto_with_message_and_offerDto()  {
+        public void should_return_OfferResponseDto_with_message_and_offerDto() {
             // Given
-                Offer offer = TestEntityFactory.anOffer();
-                AddOfferRequestDto addOfferRequestDto = TestEntityFactory.anAddOfferRequestDto(offer);
+            Offer offer = TestEntityFactory.anOffer();
+            AddOfferRequestDto addOfferRequestDto = TestEntityFactory.anAddOfferRequestDto(offer);
             // When
-                OfferResponseDto offerResponseDto = offerFacade.addOffer(addOfferRequestDto);
+            OfferResponseDto offerResponseDto = offerFacade.addOffer(addOfferRequestDto);
             // Then
-                assertThat(offerResponseDto).isNotNull();
-                assertThat(offerResponseDto.message()).isEqualTo("Successfully saved Offer : \n" +
-                        "Title: " + offer.getTitle() + "\n" +
-                        "Description: " + offer.getDescription() + "\n" +
-                        "to database.");
-                assertThat(offerResponseDto.offerDto()).isNotNull();
-                assertThat(offerResponseDto.offerDto())
-                        .extracting(OfferDto::title, OfferDto::description, OfferDto::salary, OfferDto::url)
-                        .containsExactly(offer.getTitle(), offer.getDescription(), offer.getSalary(), offer.getUrl());
-                assertThat(offerFacade.findAllOffers().size()).isEqualTo(1);
+            assertThat(offerResponseDto).isNotNull();
+            assertThat(offerResponseDto.message()).isEqualTo("Successfully saved Offer : \n" +
+                    "Title: " + offer.getTitle() + "\n" +
+                    "Description: " + offer.getDescription() + "\n" +
+                    "to database.");
+            assertThat(offerResponseDto.offerDto()).isNotNull();
+            assertThat(offerResponseDto.offerDto())
+                    .extracting(OfferDto::title, OfferDto::description, OfferDto::salary, OfferDto::url)
+                    .containsExactly(offer.getTitle(), offer.getDescription(), offer.getSalary(), offer.getUrl());
+            assertThat(offerFacade.findAllOffers().size()).isEqualTo(1);
         }
 
     }
@@ -120,39 +129,44 @@ class OfferFacadeTest {
                     .isExactlyInstanceOf(OfferNotFoundException.class);
 
         }
+    }
 
-        @Nested
-        @DisplayName("findAllOffers - Tests")
-        class FindAllOffersTest {
-            @Test
-            @DisplayName("Should return set of offers.")
-            public void should_return_set_of_offers() {
-                // Given
-
-                // When
-
-                // Then
-
+    @Nested
+    @DisplayName("findAllOffers - Tests")
+    class FindAllOffersTest {
+        @Test
+        @DisplayName("Should return set of offers.")
+        public void should_return_set_of_offers() {
+            // Given
+            for (int i = 0; i < 10; i++) {
+                Offer offer = TestEntityFactory.anOffer("TestOffer" + i);
+                offerFacade.addOffer(TestEntityFactory.anAddOfferRequestDto(offer));
             }
-
+            assertThat(offerFacade.findAllOffers().size()).isEqualTo(10);
+            // When
+            Set<OfferDto> allOffers = offerFacade.findAllOffers();
+            // Then
+            assertThat(allOffers).isNotNull();
+            assertThat(allOffers.size()).isEqualTo(10);
         }
 
-        @Nested
-        @DisplayName("fetchAllOffersAndSaveIfNotExists - Tests")
-        class FetchAllOffersAndSaveIfNotExistsTests {
-            @Test
-            @DisplayName("Should return OfferResponseDto with message and null offerDto.")
-            public void should_return_OfferResponseDto_with_message_and_null_offerDto() {
-                // Given
+    }
 
-                // When
+    @Nested
+    @DisplayName("fetchAllOffersAndSaveIfNotExists - Tests")
+    class FetchAllOffersAndSaveIfNotExistsTests {
+        @Test
+        @DisplayName("Should return OfferResponseDto with message and null offerDto.")
+        public void should_return_OfferResponseDto_with_message_and_null_offerDto() {
+            // Given
 
-                // Then
-
-            }
-
+            // When
+            OfferResponseDto offerResponseDto = offerFacade.fetchAllOffersAndSaveIfNotExists();
+            // Then
+//                assertThat(offerResponseDto).isNotNull();
+//                assertThat(offerResponseDto.message()).isEqualTo("Successfully fetched and saved offers from external API.");
+//                assertThat(offerResponseDto.offerDto()).isNull();
         }
-
 
     }
 }

@@ -4,6 +4,7 @@ import com.joboffersapi.domain.userCRUD.dto.LoginRequestDto;
 import com.joboffersapi.domain.userCRUD.dto.UserDto;
 import com.joboffersapi.domain.userCRUD.dto.UserRegisterRequestDto;
 import com.joboffersapi.domain.userCRUD.dto.UserResponseDto;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -17,7 +18,7 @@ class UserFacade {
         return null;
     }
 
-    public UserResponseDto register(UserRegisterRequestDto requestDto) {
+    public UserResponseDto register(@Valid UserRegisterRequestDto requestDto) {
         return userService.registerUser(requestDto);
     }
 

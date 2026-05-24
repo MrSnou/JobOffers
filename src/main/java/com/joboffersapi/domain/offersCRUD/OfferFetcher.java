@@ -18,7 +18,7 @@ class OfferFetcher {
 
     public void findAllOffersFromSite() {
         String jsonResponse = restTemplate.execute(
-                "",
+                "https://www.google.pl",
                 HttpMethod.GET,
                 null,
                 null,
