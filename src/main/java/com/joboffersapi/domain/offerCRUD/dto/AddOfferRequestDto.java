@@ -1,4 +1,4 @@
-package com.joboffersapi.domain.offersCRUD.dto;
+package com.joboffersapi.domain.offerCRUD.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -17,15 +17,15 @@ public record AddOfferRequestDto(
 
         @NotNull
         @NotEmpty
-        @Size(min = 1, max = 300)
-        String description,
+        @Size(min = 1, max = 50)
+        String company,
 
         @NotNull
         @NotEmpty
         @PositiveOrZero
         double salary,
+
         @NotNull
-        @PositiveOrZero
-        URL url
+        String url
 ) {
 }

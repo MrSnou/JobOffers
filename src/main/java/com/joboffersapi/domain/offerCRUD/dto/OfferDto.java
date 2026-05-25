@@ -1,15 +1,13 @@
-package com.joboffersapi.domain.offersCRUD.dto;
+package com.joboffersapi.domain.offerCRUD.dto;
 
 import lombok.Builder;
-
-import java.net.URL;
 
 @Builder
 public record OfferDto(
         Long id,
         String title,
-        String description,
+        String company,
         double salary,
-        URL url
+        String url
 ) {
 }

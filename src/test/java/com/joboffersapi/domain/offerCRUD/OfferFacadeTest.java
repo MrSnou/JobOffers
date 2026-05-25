@@ -1,48 +1,36 @@
-package com.joboffersapi.domain.offersCRUD;
+package com.joboffersapi.domain.offerCRUD;
 
-import com.joboffersapi.domain.offersCRUD.dto.AddOfferRequestDto;
-import com.joboffersapi.domain.offersCRUD.dto.OfferDto;
-import com.joboffersapi.domain.offersCRUD.dto.OfferResponseDto;
-import com.joboffersapi.domain.offersCRUD.exception.OfferNotFoundException;
+import com.joboffersapi.domain.offerCRUD.dto.AddOfferRequestDto;
+import com.joboffersapi.domain.offerCRUD.dto.FetchOfferResponseDto;
+import com.joboffersapi.domain.offerCRUD.dto.OfferDto;
+import com.joboffersapi.domain.offerCRUD.dto.OfferResponseDto;
+import com.joboffersapi.domain.offerCRUD.exception.OfferNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Set;
 
-import static com.joboffersapi.domain.offersCRUD.OfferFacadeConfiguration.getOfferFacadeForTests;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
 class OfferFacadeTest {
 
+    private final OfferFacadeTestConfiguration offerFacadeTestConfiguration = new OfferFacadeTestConfiguration();
 
-    OfferFacade offerFacade = getOfferFacadeForTests(
-            new InMemoryOfferRepository(),
-            new RestTemplateMock()
-    );
+    OfferFacade offerFacade = offerFacadeTestConfiguration.getOfferFacadeForTests();
 
     static class TestEntityFactory {
 
         private static final String DEFAULT_OFFER_NAME = "TestOffer";
-        private static final String DEFAULT_OFFER_DESCRIPTION = "TestOffer";
+        private static final String DEFAULT_OFFER_COMPANY = "TestCompany";
         private static final Double DEFAULT_OFFER_SALARY = 67.67;
-        private static final URL DEFAULT_OFFER_URL;
-
-        static {
-            try {
-                DEFAULT_OFFER_URL = new URL("https://test.com");
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        private static final String DEFAULT_OFFER_URL = "http://localhost:8080";
 
         static Offer anOffer() {
             return Offer.builder()
                     .title(DEFAULT_OFFER_NAME)
-                    .description(DEFAULT_OFFER_DESCRIPTION)
+                    .company(DEFAULT_OFFER_COMPANY)
                     .salary(DEFAULT_OFFER_SALARY)
                     .url(DEFAULT_OFFER_URL)
                     .build();
@@ -51,7 +39,7 @@ class OfferFacadeTest {
         static Offer anOffer(String name) {
             return Offer.builder()
                     .title(name)
-                    .description(DEFAULT_OFFER_DESCRIPTION)
+                    .company(DEFAULT_OFFER_COMPANY)
                     .salary(DEFAULT_OFFER_SALARY)
                     .url(DEFAULT_OFFER_URL)
                     .build();
@@ -60,7 +48,7 @@ class OfferFacadeTest {
         static AddOfferRequestDto anAddOfferRequestDto(Offer offer) {
             return AddOfferRequestDto.builder()
                     .title(offer.getTitle())
-                    .description(offer.getDescription())
+                    .company(offer.getCompany())
                     .salary(offer.getSalary())
                     .url(offer.getUrl())
                     .build();
@@ -80,16 +68,15 @@ class OfferFacadeTest {
             AddOfferRequestDto addOfferRequestDto = TestEntityFactory.anAddOfferRequestDto(offer);
             // When
             OfferResponseDto offerResponseDto = offerFacade.addOffer(addOfferRequestDto);
-            // Then
             assertThat(offerResponseDto).isNotNull();
             assertThat(offerResponseDto.message()).isEqualTo("Successfully saved Offer : \n" +
                     "Title: " + offer.getTitle() + "\n" +
-                    "Description: " + offer.getDescription() + "\n" +
+                    "Company: " + offer.getCompany() + "\n" +
                     "to database.");
             assertThat(offerResponseDto.offerDto()).isNotNull();
             assertThat(offerResponseDto.offerDto())
-                    .extracting(OfferDto::title, OfferDto::description, OfferDto::salary, OfferDto::url)
-                    .containsExactly(offer.getTitle(), offer.getDescription(), offer.getSalary(), offer.getUrl());
+                    .extracting(OfferDto::title, OfferDto::company, OfferDto::salary, OfferDto::url)
+                    .containsExactly(offer.getTitle(), offer.getCompany(), offer.getSalary(), offer.getUrl());
             assertThat(offerFacade.findAllOffers().size()).isEqualTo(1);
         }
 
@@ -112,8 +99,8 @@ class OfferFacadeTest {
                     .isEqualTo("Offer with id " + addedOffer.offerDto().id() + " successfully found.");
             assertThat(offerResponseDto.offerDto()).isNotNull();
             assertThat(offerResponseDto.offerDto())
-                    .extracting(OfferDto::title, OfferDto::description, OfferDto::salary, OfferDto::url)
-                    .containsExactly(offer.getTitle(), offer.getDescription(), offer.getSalary(), offer.getUrl());
+                    .extracting(OfferDto::title, OfferDto::salary, OfferDto::url)
+                    .containsExactly(offer.getTitle(), offer.getSalary(), offer.getUrl());
 
         }
 
@@ -161,11 +148,18 @@ class OfferFacadeTest {
             // Given
 
             // When
-            OfferResponseDto offerResponseDto = offerFacade.fetchAllOffersAndSaveIfNotExists();
+            FetchOfferResponseDto fetchOfferResponseDto = offerFacade.fetchAllOffersAndSaveIfNotExists();
             // Then
-//                assertThat(offerResponseDto).isNotNull();
-//                assertThat(offerResponseDto.message()).isEqualTo("Successfully fetched and saved offers from external API.");
-//                assertThat(offerResponseDto.offerDto()).isNull();
+            assertThat(fetchOfferResponseDto).isNotNull();
+            assertThat(fetchOfferResponseDto.message()).isEqualTo("Successfully fetched and saved offers from external API.");
+            assertThat(fetchOfferResponseDto.jobOffersList()).isNotNull();
+            fetchOfferResponseDto.jobOffersList().forEach(jobOffer -> {
+                System.out.println(
+                                "Title: " + jobOffer.title() + "\n" +
+                                "Company: " + jobOffer.company() + "\n" +
+                                "Salary:  " + jobOffer.salary() + "\n" +
+                                "OfferUrl: " + jobOffer.offerUrl() + "\n ------");
+            });
         }
 
     }

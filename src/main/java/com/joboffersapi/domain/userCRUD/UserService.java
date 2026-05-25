@@ -4,6 +4,7 @@ import com.joboffersapi.domain.userCRUD.dto.UserDto;
 import com.joboffersapi.domain.userCRUD.dto.UserRegisterRequestDto;
 import com.joboffersapi.domain.userCRUD.dto.UserResponseDto;
 import com.joboffersapi.domain.userCRUD.exception.UserExistsException;
+import com.joboffersapi.domain.userCRUD.exception.UserNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,9 @@ class UserService {
     }
 
     UserDto findByUsername(final String username) {
-        return mapFromUserToUserDto(userRepository.findByUsername(username));
+        return mapFromUserToUserDto(
+                userRepository.findByUsername(username)
+                        .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found.")));
     }
 
 }

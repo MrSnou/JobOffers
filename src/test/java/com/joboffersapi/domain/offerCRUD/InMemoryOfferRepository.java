@@ -1,6 +1,5 @@
-package com.joboffersapi.domain.offersCRUD;
+package com.joboffersapi.domain.offerCRUD;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +35,7 @@ class InMemoryOfferRepository implements OfferRepository {
     }
 
     @Override
-    public boolean existsByUrl(final URL url) {
+    public boolean existsByUrl(final String url) {
         return db.values().stream()
                 .anyMatch(offer -> offer.getUrl().equals(url));
     }

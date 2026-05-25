@@ -1,4 +1,4 @@
-package com.joboffersapi.domain.offersCRUD.dto;
+package com.joboffersapi.domain.offerCRUD.dto;
 
 import lombok.Builder;
 

@@ -1,15 +1,13 @@
-package com.joboffersapi.domain.offersCRUD;
+package com.joboffersapi.domain.offerCRUD;
 
 import com.joboffersapi.domain.model.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.net.URL;
 
 @Document(collection = "offers")
 @Getter
@@ -19,14 +17,11 @@ class Offer extends BaseEntity {
 
     @MongoId(value = FieldType.OBJECT_ID)
     private Long id;
-    @Field("title")
+
     private String title;
-    @Field("description")
-    private String description;
-    @Field("salary")
+    private String company;
     private double salary;
-    @Field("url")
-    private URL url;
+    private String url;
 
 
 

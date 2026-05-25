@@ -1,4 +1,4 @@
-package com.joboffersapi.domain.offersCRUD;
+package com.joboffersapi.domain.offerCRUD;
 
 import org.springframework.data.repository.Repository;
 
@@ -15,5 +15,5 @@ interface OfferRepository extends Repository<Offer, Long> {
 
      Iterable<Offer> findAll();
 
-     boolean existsByUrl(URL url);
+     boolean existsByUrl(String url);
 }

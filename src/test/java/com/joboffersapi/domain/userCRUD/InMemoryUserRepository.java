@@ -3,6 +3,7 @@ package com.joboffersapi.domain.userCRUD;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -20,11 +21,10 @@ class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User findByUsername(final String username) {
+    public Optional<User> findByUsername(final String username) {
         return db.values().stream()
                 .filter(user -> user.getUsername().equals(username))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .findFirst();
     }
 
     @Override

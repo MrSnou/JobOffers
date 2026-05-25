@@ -3,6 +3,7 @@ package com.joboffersapi.domain.userCRUD;
 import com.joboffersapi.domain.userCRUD.dto.UserDto;
 import com.joboffersapi.domain.userCRUD.dto.UserRegisterRequestDto;
 import com.joboffersapi.domain.userCRUD.dto.UserResponseDto;
+import com.joboffersapi.domain.userCRUD.exception.UserNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,20 @@ class UserFacadeTest {
     @Nested
     @DisplayName("findUserByUsername - Tests")
     class FindUserByUsernameTests {
+
+        @Test
+        @DisplayName("Should throw UserNotFoundException when user with given username does not exist.")
+        public void should_throw_UserNotFoundException_when_user_with_given_username_does_not_exist() {
+            // Given
+            String nonExistentUsername = "NonExistentUser";
+            // When
+            Throwable thrown = org.assertj.core.api.AssertionsForClassTypes.catchThrowable(() -> userFacade.findUserByUsername(nonExistentUsername));
+            // Then
+            assertThat(thrown).isInstanceOf(UserNotFoundException.class)
+                    .hasMessage("User with username " + nonExistentUsername + " not found.");
+        }
+
+
         @Test
         @DisplayName("Should return userDto.")
         public void should_return_OfferResponseDto_with_message_and_offerDto() {
@@ -75,7 +90,7 @@ class UserFacadeTest {
                     .password(DEFAULT_USER_PASSWORD)
                     .email(DEFAULT_USER_EMAIL)
                     .build();
-            UserResponseDto registerResponse = userFacade.register(userRegisterRequestDto);
+            userFacade.register(userRegisterRequestDto);
             // When
             UserDto userByUsername = userFacade.findUserByUsername(DEFAULT_USER_NAME);
             // Then
