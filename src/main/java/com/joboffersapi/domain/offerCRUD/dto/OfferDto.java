@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record OfferDto(
-        Long id,
+        String id,
         String title,
         String company,
         double salary,

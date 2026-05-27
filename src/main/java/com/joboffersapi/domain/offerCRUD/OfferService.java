@@ -13,8 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.joboffersapi.domain.offerCRUD.OfferMapper.mapFromAddOfferRequestDtoToOffer;
-import static com.joboffersapi.domain.offerCRUD.OfferMapper.mapFromOfferToOfferDto;
+import static com.joboffersapi.domain.offerCRUD.OfferMapper.*;
 
 
 @Service
@@ -38,7 +37,7 @@ class OfferService {
                 "to database.", mapFromOfferToOfferDto(savedOffer));
     }
 
-    OfferResponseDto findOfferById(final Long id) {
+    OfferResponseDto findOfferById(final String id) {
         Offer offerById = offerRepository.findById(id).
                 orElseThrow(() -> new OfferNotFoundException("Offer with id " + id + " not found."));
         return OfferResponseDto.builder()
@@ -55,18 +54,11 @@ class OfferService {
         return offers;
     }
 
-
-
     public List<JobOfferResponse> fetchOffers() {
         List<JobOfferResponse> fetchedOffers = offerFetcher.fetchOffers();
         List<JobOfferResponse> savedOffers = new ArrayList<>();
         for (JobOfferResponse jobOfferResponse : fetchedOffers) {
-            Offer offer = Offer.builder()
-                    .title(jobOfferResponse.title())
-                    .company(jobOfferResponse.company())
-                    .salary(jobOfferResponse.salary())
-                    .url(jobOfferResponse.offerUrl())
-                    .build();
+            Offer offer = mapFromJobOfferResponseToOffer(jobOfferResponse);
             if (saveOfferIfNotExist(offer)) {
                 savedOffers.add(jobOfferResponse);
             }

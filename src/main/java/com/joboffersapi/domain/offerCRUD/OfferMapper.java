@@ -43,4 +43,13 @@ class OfferMapper {
                 .url(addOfferRequestDto.url())
                 .build();
     }
+
+    public static Offer mapFromJobOfferResponseToOffer(final JobOfferResponse jobOfferResponse) {
+        return Offer.builder()
+                .company(jobOfferResponse.company())
+                .title(jobOfferResponse.title())
+                .salary(jobOfferResponse.salary())
+                .url(jobOfferResponse.offerUrl())
+                .build();
+    }
 }

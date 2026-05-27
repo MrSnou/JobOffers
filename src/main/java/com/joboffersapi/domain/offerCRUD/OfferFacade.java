@@ -19,7 +19,7 @@ public class OfferFacade {
         return offerService.addOfferFromRequestDto(addOfferRequestDto);
     }
 
-    public OfferResponseDto findOfferById(Long id) {
+    public OfferResponseDto findOfferById(String id) {
         return offerService.findOfferById(id);
     }
 

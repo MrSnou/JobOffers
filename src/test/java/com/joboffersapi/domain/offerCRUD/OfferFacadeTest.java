@@ -108,7 +108,7 @@ class OfferFacadeTest {
         @DisplayName("Should throw OfferNotFoundException when offer with given id does not exist.")
         public void should_throw_OfferNotFoundException_when_offer_with_given_id_does_not_exist() {
             // Given
-            Long nonExistingId = 999L;
+            String nonExistingId = "999L";
             // When
             Throwable throwable = catchThrowable(() -> offerFacade.findOfferById(nonExistingId));
             // Then

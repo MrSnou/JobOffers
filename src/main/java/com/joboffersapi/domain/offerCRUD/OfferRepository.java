@@ -1,19 +1,11 @@
 package com.joboffersapi.domain.offerCRUD;
 
-import org.springframework.data.repository.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-import java.net.URL;
-import java.util.Optional;
 
-interface OfferRepository extends Repository<Offer, Long> {
-
-     Offer save(Offer offer);
-
-     Optional<Offer> findById(Long id);
-
-     void deleteById(Long id);
-
-     Iterable<Offer> findAll();
+@Repository
+interface OfferRepository extends MongoRepository<Offer, String> {
 
      boolean existsByUrl(String url);
 }

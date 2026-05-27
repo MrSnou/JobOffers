@@ -56,7 +56,7 @@ class UserFacadeTest {
             assertThat(registerResponse).extracting("message", "userDto").containsExactly(
                     "User registered successfully.",
                     UserDto.builder()
-                            .id(0L)
+                            .id("0L")
                             .username(DEFAULT_USER_NAME)
                             .email(DEFAULT_USER_EMAIL)
                             .build()
@@ -95,7 +95,7 @@ class UserFacadeTest {
             UserDto userByUsername = userFacade.findUserByUsername(DEFAULT_USER_NAME);
             // Then
             assertThat(userByUsername).extracting("id", "username", "email").containsExactly(
-                    0L,
+                    "0L",
                     DEFAULT_USER_NAME,
                     DEFAULT_USER_EMAIL
             );
