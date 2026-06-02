@@ -34,4 +34,8 @@ class OfferFacadeTestConfiguration {
     public OfferFacade getOfferFacadeForTests() {
         return new OfferFacade(new OfferService(offerRepository, inMemoryFetcherTestImpl));
     }
+
+    void clearDatabase() {
+        offerRepository.deleteAll();
+    }
 }

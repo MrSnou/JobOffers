@@ -7,6 +7,7 @@ import com.joboffersapi.domain.offerCRUD.dto.OfferResponseDto;
 import com.joboffersapi.domain.offerCRUD.exception.OfferNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,6 +55,7 @@ class OfferService {
         return offers;
     }
 
+    @Transactional
     public List<JobOfferResponse> fetchOffers() {
         List<JobOfferResponse> fetchedOffers = offerFetcher.fetchOffers();
         List<JobOfferResponse> savedOffers = new ArrayList<>();

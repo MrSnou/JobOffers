@@ -5,6 +5,7 @@ import com.joboffersapi.domain.offerCRUD.dto.FetchOfferResponseDto;
 import com.joboffersapi.domain.offerCRUD.dto.OfferDto;
 import com.joboffersapi.domain.offerCRUD.dto.OfferResponseDto;
 import com.joboffersapi.domain.offerCRUD.exception.OfferNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,11 @@ class OfferFacadeTest {
     private final OfferFacadeTestConfiguration offerFacadeTestConfiguration = new OfferFacadeTestConfiguration();
 
     OfferFacade offerFacade = offerFacadeTestConfiguration.getOfferFacadeForTests();
+
+    @BeforeEach
+    void setUp() {
+        offerFacadeTestConfiguration.clearDatabase();
+    }
 
     static class TestEntityFactory {
 
@@ -126,7 +132,12 @@ class OfferFacadeTest {
         public void should_return_set_of_offers() {
             // Given
             for (int i = 0; i < 10; i++) {
-                Offer offer = TestEntityFactory.anOffer("TestOffer" + i);
+                Offer offer = Offer.builder()
+                        .title("TestOffer" + i)
+                        .company("TestCompany" + i)
+                        .salary(67.67 + i)
+                        .url("http://localhost:8080/" + i)
+                        .build();
                 offerFacade.addOffer(TestEntityFactory.anAddOfferRequestDto(offer));
             }
             assertThat(offerFacade.findAllOffers().size()).isEqualTo(10);
@@ -153,13 +164,13 @@ class OfferFacadeTest {
             assertThat(fetchOfferResponseDto).isNotNull();
             assertThat(fetchOfferResponseDto.message()).isEqualTo("Successfully fetched and saved offers from external API.");
             assertThat(fetchOfferResponseDto.jobOffersList()).isNotNull();
-            fetchOfferResponseDto.jobOffersList().forEach(jobOffer -> {
-                System.out.println(
-                                "Title: " + jobOffer.title() + "\n" +
-                                "Company: " + jobOffer.company() + "\n" +
-                                "Salary:  " + jobOffer.salary() + "\n" +
-                                "OfferUrl: " + jobOffer.offerUrl() + "\n ------");
-            });
+//            fetchOfferResponseDto.jobOffersList().forEach(jobOffer -> {
+//                System.out.println(
+//                                "Title: " + jobOffer.title() + "\n" +
+//                                "Company: " + jobOffer.company() + "\n" +
+//                                "Salary:  " + jobOffer.salary() + "\n" +
+//                                "OfferUrl: " + jobOffer.offerUrl() + "\n ------");
+//            }); // Just for visual purposes. :)
         }
 
     }
