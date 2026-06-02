@@ -6,7 +6,6 @@ import com.joboffersapi.domain.offerCRUD.dto.JobOfferResponse;
 import com.joboffersapi.domain.offerCRUD.dto.OfferDto;
 import com.joboffersapi.domain.offerCRUD.dto.OfferResponseDto;
 import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -27,7 +26,6 @@ public class OfferFacade {
         return offerService.findAllOffers();
     }
 
-    @Transactional
     public FetchOfferResponseDto fetchAllOffersAndSaveIfNotExists() {
         Iterable<JobOfferResponse> jobOfferResponses = offerService.fetchOffers();
         return FetchOfferResponseDto.builder()

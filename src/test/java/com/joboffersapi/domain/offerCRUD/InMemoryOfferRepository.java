@@ -18,7 +18,6 @@ class InMemoryOfferRepository implements OfferRepository {
 
     Map<String, Offer> database = new ConcurrentHashMap<>();
 
-
     @Override
     public <S extends Offer> S save(S entity) {
         if (database.values().stream().anyMatch(offer -> offer.getUrl().equals(entity.getUrl()))) {
@@ -66,12 +65,11 @@ class InMemoryOfferRepository implements OfferRepository {
 
     @Override
     public void deleteAll(final Iterable<? extends Offer> entities) {
-
     }
 
     @Override
     public void deleteAll() {
-
+        database.clear();
     }
 
     @Override
