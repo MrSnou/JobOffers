@@ -20,9 +20,11 @@ class Offer  {
 
     private String title;
     private String company;
-    private double salary;
+    private String salary;
     @Indexed(unique = true)
     private String url;
+    private String source;
+    private boolean salary_estimated;
 
 
 

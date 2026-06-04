@@ -1,6 +1,6 @@
 package com.joboffersapi.domain.offerCRUD;
 
-import com.joboffersapi.domain.offerCRUD.dto.JobOfferResponse;
+import com.joboffersapi.domain.offerCRUD.dto.FetchedOffer;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ class InMemoryFetcherTestImpl implements OfferFetchable{
     }
 
     @Override
-    public List<JobOfferResponse> fetchOffers() {
+    public List<FetchedOffer> fetchOffers() {
         return OfferMapper.mapFromJsonToOffers(jsonString);
     }
 }

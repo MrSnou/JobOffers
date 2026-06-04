@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -20,6 +23,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 @AutoConfigureMockMvc
 @Testcontainers
 public class BaseIntegrationTest {
+
 
     @Autowired
     public MockMvc mockMvc;
@@ -34,4 +38,10 @@ public class BaseIntegrationTest {
     public static WireMockExtension wireMockExtension = WireMockExtension.newInstance()
             .options(wireMockConfig().dynamicPort())
             .build();
+
+    @DynamicPropertySource
+    public static void dynamicProperties(DynamicPropertyRegistry registry) {
+            registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+            registry.add("job_offers.api.base-url", wireMockExtension::baseUrl);
+    }
 }

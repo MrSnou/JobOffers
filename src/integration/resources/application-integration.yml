@@ -4,3 +4,8 @@ spring:
     data:
         mongodb:
             auto-index-creation: true
+
+
+job_offers:
+    api:
+        base-url: http://localhost:8080

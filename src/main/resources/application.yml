@@ -1,0 +1,19 @@
+server:
+    port: 8080
+
+spring:
+    application:
+        name: jobOffers
+
+    mongodb:
+        port: 27017
+        host: localhost
+        database: job-offers-api
+        username: admin
+        password: admin
+        authentication-database: job-offers-api
+
+job_offers:
+    api:
+        base-url: http://ec2-18-194-181-208.eu-central-1.compute.amazonaws.com:5057
+

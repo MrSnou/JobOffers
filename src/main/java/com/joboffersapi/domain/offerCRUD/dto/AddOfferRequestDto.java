@@ -6,8 +6,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
-import java.net.URL;
-
 @Builder
 public record AddOfferRequestDto(
         @NotNull
@@ -23,9 +21,14 @@ public record AddOfferRequestDto(
         @NotNull
         @NotEmpty
         @PositiveOrZero
-        double salary,
+        String salary,
 
         @NotNull
-        String url
+        String url,
+
+        @NotNull
+        String source,
+
+        Boolean salary_estimated
 ) {
 }
