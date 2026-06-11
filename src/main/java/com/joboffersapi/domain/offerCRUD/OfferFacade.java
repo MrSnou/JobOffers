@@ -33,7 +33,7 @@ public class OfferFacade {
                 .message("Fetched " + newlyFetchedOffers.size() + " new offers from external API.")
                 .jobOffersList(newlyFetchedOffers.stream()
                         .map(OfferMapper::mapFromOfferToOfferDto)
-                        .collect(Collectors.toSet()))
+                        .toList())
                 .build();
     }
 }
