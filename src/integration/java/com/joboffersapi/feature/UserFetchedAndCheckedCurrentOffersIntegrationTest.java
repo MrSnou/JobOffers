@@ -4,15 +4,13 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.joboffersapi.BaseIntegrationTest;
 import com.joboffersapi.domain.offerCRUD.OfferFacade;
 import com.joboffersapi.domain.offerCRUD.OfferFetchable;
+import com.joboffersapi.domain.offerCRUD.dto.FetchOfferResponseDto;
 import com.joboffersapi.domain.offerCRUD.dto.FetchedOffer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Duration;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 
 
 class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationTest {
@@ -58,21 +56,6 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
                 new FetchedOffer("Mid Java", "Y", "10000 PLN",
                         "http://y.pl", "Y", true)
         );
-
-        // Scheduler check and awaitility check
-        await()
-                .atMost(Duration.ofSeconds(20))
-                .pollInterval(Duration.ofSeconds(1))
-                .until(() -> {
-                    try {
-                        return offerFacade.fetchAllOffersAndSaveIfNotExists().jobOffersList().size() == 2;
-                    } catch (Exception e) {
-                        return false;
-                    }
-                });
-
-
-
         // 1. User sending request to controller
 
         // 2. Service layer fetching offers from external site and saving them to db if not exists

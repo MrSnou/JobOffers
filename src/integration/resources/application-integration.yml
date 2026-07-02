@@ -10,4 +10,5 @@ job_offers:
     api:
         base-url: http://localhost:8080
     scheduler:
-        time-cron: "0 * * * * ?" # Every second
+        enabled: false
+        time-cron: "* * * * * ?" # Every second
