@@ -3,12 +3,12 @@ package com.joboffersapi.domain.offerCRUD.dto;
 import lombok.Builder;
 
 @Builder
-public record OfferDto(
-        String id,
+public record FetchedOffer(
         String title,
         String company,
         String salary,
-        String url,
-        String source
+        String offerUrl,
+        String source,
+        boolean salaryEstimated
 ) {
 }

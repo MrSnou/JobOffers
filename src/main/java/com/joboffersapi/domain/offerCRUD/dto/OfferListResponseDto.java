@@ -4,7 +4,6 @@ import lombok.Builder;
 
 import java.util.List;
 
-
 @Builder
-public record FetchOfferResponseDto(String message, List<OfferDto> jobOffersList) {
+public record OfferListResponseDto(List<OfferDto> offers) {
 }

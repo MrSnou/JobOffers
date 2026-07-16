@@ -30,8 +30,10 @@ class OfferFacadeTest {
 
         private static final String DEFAULT_OFFER_NAME = "TestOffer";
         private static final String DEFAULT_OFFER_COMPANY = "TestCompany";
-        private static final Double DEFAULT_OFFER_SALARY = 67.67;
+        private static final String DEFAULT_OFFER_SALARY = "67.67";
         private static final String DEFAULT_OFFER_URL = "http://localhost:8080";
+        private static final String DEFAULT_SOURCE = "LinkedIn";
+        private static final boolean DEFAULT_SALARY_ESTIMATED = false;
 
         static Offer anOffer() {
             return Offer.builder()
@@ -39,6 +41,8 @@ class OfferFacadeTest {
                     .company(DEFAULT_OFFER_COMPANY)
                     .salary(DEFAULT_OFFER_SALARY)
                     .url(DEFAULT_OFFER_URL)
+                    .source(DEFAULT_SOURCE)
+                    .salary_estimated(DEFAULT_SALARY_ESTIMATED)
                     .build();
         }
 
@@ -48,6 +52,8 @@ class OfferFacadeTest {
                     .company(DEFAULT_OFFER_COMPANY)
                     .salary(DEFAULT_OFFER_SALARY)
                     .url(DEFAULT_OFFER_URL)
+                    .source(DEFAULT_SOURCE)
+                    .salary_estimated(DEFAULT_SALARY_ESTIMATED)
                     .build();
         }
 
@@ -57,6 +63,8 @@ class OfferFacadeTest {
                     .company(offer.getCompany())
                     .salary(offer.getSalary())
                     .url(offer.getUrl())
+                    .source(offer.getSource())
+                    .salary_estimated(offer.isSalary_estimated())
                     .build();
         }
 
@@ -135,7 +143,7 @@ class OfferFacadeTest {
                 Offer offer = Offer.builder()
                         .title("TestOffer" + i)
                         .company("TestCompany" + i)
-                        .salary(67.67 + i)
+                        .salary("67.67" + i)
                         .url("http://localhost:8080/" + i)
                         .build();
                 offerFacade.addOffer(TestEntityFactory.anAddOfferRequestDto(offer));
@@ -162,15 +170,17 @@ class OfferFacadeTest {
             FetchOfferResponseDto fetchOfferResponseDto = offerFacade.fetchAllOffersAndSaveIfNotExists();
             // Then
             assertThat(fetchOfferResponseDto).isNotNull();
-            assertThat(fetchOfferResponseDto.message()).isEqualTo("Successfully fetched and saved offers from external API.");
+            assertThat(fetchOfferResponseDto.message()).isEqualTo("Fetched 3 new offers from external API.");
             assertThat(fetchOfferResponseDto.jobOffersList()).isNotNull();
-//            fetchOfferResponseDto.jobOffersList().forEach(jobOffer -> {
-//                System.out.println(
-//                                "Title: " + jobOffer.title() + "\n" +
-//                                "Company: " + jobOffer.company() + "\n" +
-//                                "Salary:  " + jobOffer.salary() + "\n" +
-//                                "OfferUrl: " + jobOffer.offerUrl() + "\n ------");
-//            }); // Just for visual purposes. :)
+            fetchOfferResponseDto.jobOffersList().forEach(jobOffer -> {
+                System.out.println(
+                                "Offer Id: " + jobOffer.id() + "\n" +
+                                "Title: " + jobOffer.title() + "\n" +
+                                "Company: " + jobOffer.company() + "\n" +
+                                "Salary:  " + jobOffer.salary() + "\n" +
+                                "OfferUrl: " + jobOffer.url() + "\n" +
+                                "Source: " + jobOffer.source() + "\n  ----------");
+            }); // Just for visual purposes. :)
         }
 
     }
