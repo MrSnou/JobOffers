@@ -2,10 +2,9 @@ package com.joboffersapi.feature;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.joboffersapi.BaseIntegrationTest;
-import com.joboffersapi.domain.offerCRUD.OfferFacade;
-import com.joboffersapi.domain.offerCRUD.OfferFetchable;
-import com.joboffersapi.domain.offerCRUD.dto.FetchOfferResponseDto;
-import com.joboffersapi.domain.offerCRUD.dto.FetchedOffer;
+import com.joboffersapi.domain.offercrud.OfferFacade;
+import com.joboffersapi.domain.offercrud.OfferFetchable;
+import com.joboffersapi.domain.offercrud.dto.FetchedOffer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
