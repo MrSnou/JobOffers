@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
@@ -137,7 +137,7 @@ class OfferFacadeTest {
     class FindAllOffersTest {
         @Test
         @DisplayName("Should return set of offers.")
-        public void should_return_set_of_offers() {
+        public void should_return_list_of_offers() {
             // Given
             for (int i = 0; i < 10; i++) {
                 Offer offer = Offer.builder()
@@ -150,7 +150,7 @@ class OfferFacadeTest {
             }
             assertThat(offerFacade.findAllOffers().size()).isEqualTo(10);
             // When
-            Set<OfferDto> allOffers = offerFacade.findAllOffers();
+            List<OfferDto> allOffers = offerFacade.findAllOffers();
             // Then
             assertThat(allOffers).isNotNull();
             assertThat(allOffers.size()).isEqualTo(10);

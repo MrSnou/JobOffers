@@ -4,12 +4,15 @@ import com.joboffersapi.domain.offercrud.dto.AddOfferRequestDto;
 import com.joboffersapi.domain.offercrud.dto.FetchOfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
+import com.joboffersapi.domain.offercrud.dto.OffersListDto;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
+@Log4j2
 public class OfferFacade {
 
     private final OfferService offerService;
@@ -22,8 +25,8 @@ public class OfferFacade {
         return offerService.findOfferById(id);
     }
 
-    public Set<OfferDto> findAllOffers() {
-        return offerService.findAllOffers();
+    public List<OfferDto> findAllOffers() {
+        return offerService.findAllOffersFromDb();
     }
 
     public FetchOfferResponseDto fetchAllOffersAndSaveIfNotExists() {
@@ -34,5 +37,13 @@ public class OfferFacade {
                         .map(OfferMapper::mapFromOfferToOfferDto)
                         .toList())
                 .build();
+    }
+
+    @Transactional
+    public OffersListDto findAllOffersAndRefreshDatabase() {
+        return OffersListDto.builder()
+                .offers(offerService.findAllOffers())
+                .build();
+
     }
 }

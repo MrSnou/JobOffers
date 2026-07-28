@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -27,8 +26,8 @@ public class BaseIntegrationTest {
 
     @Autowired
     public MockMvc mockMvc;
-
-    public ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    public ObjectMapper objectMapper;
 
     @Container
     @ServiceConnection

@@ -7,13 +7,16 @@ import com.joboffersapi.domain.offercrud.dto.AddOfferRequestDto;
 import com.joboffersapi.domain.offercrud.dto.FetchedOffer;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.exception.RemoteServerDataMappingException;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
 class OfferMapper {
 
+    static ObjectMapper objectMapper;
+
     static List<FetchedOffer> mapFromJsonToOffers(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(
                     json,
