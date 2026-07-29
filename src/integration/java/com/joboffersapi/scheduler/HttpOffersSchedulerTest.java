@@ -1,7 +1,7 @@
 package com.joboffersapi.scheduler;
 
 import com.joboffersapi.BaseIntegrationTest;
-import com.joboffersapi.domain.offerCRUD.OfferFetchable;
+import com.joboffersapi.domain.offercrud.OfferFetchable;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
