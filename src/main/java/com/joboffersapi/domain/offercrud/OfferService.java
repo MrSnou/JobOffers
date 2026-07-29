@@ -35,7 +35,7 @@ class OfferService {
         log.info("OfferService | findAllOffers - fetching all offers from database and external API's.");
         List<OfferDto> allOffers = new ArrayList<>();
         fetchAndSaveNewOffers();
-        findAllOffers().forEach(allOffers::add);
+        findAllOffersFromDb().forEach(allOffers::add);
         return allOffers;
     }
 
