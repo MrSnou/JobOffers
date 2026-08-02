@@ -1,6 +1,7 @@
 package com.joboffersapi.domain.offercrud;
 
 
+
 class OfferFacadeTestConfiguration {
     private final OfferFetchable inMemoryFetcherTestImpl;
     private final OfferRepository offerRepository;

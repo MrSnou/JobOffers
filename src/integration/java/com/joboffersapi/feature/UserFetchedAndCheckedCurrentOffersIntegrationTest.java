@@ -51,8 +51,7 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         assertThat(jobOfferFromApis).containsExactlyInAnyOrder(new FetchedOffer("Junior Java", "X", "5000 PLN", "http://x.pl", "X", false), new FetchedOffer("Mid Java", "Y", "10000 PLN", "http://y.pl", "Y", true));
 
         // 1. User sending request to controller
-        // Given
-        // When
+        // Given && When
         ResultActions resultActions = mockMvc.perform(get("/offers").accept(MediaType.APPLICATION_JSON));
         // Then
         resultActions.andExpect(status().isOk());
