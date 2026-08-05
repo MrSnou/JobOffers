@@ -1,5 +1,7 @@
 package com.joboffersapi.domain.offercrud;
 
+import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
+import org.bson.types.ObjectId;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -23,20 +25,25 @@ class InMemoryOfferRepository implements OfferRepository {
         if (database.values().stream().anyMatch(offer -> offer.getUrl().equals(entity.getUrl()))) {
             throw new DuplicateKeyException(String.format("Offer with offerUrl [%s] already exists", entity.getUrl()));
         }
-        UUID id = UUID.randomUUID();
+        String id = UUID.randomUUID().toString().replace("-", "").substring(0, 24); // Mongo HexString ID imitation.
         Offer offer = Offer.builder()
-                .id(id.toString())
+                .id(id)
                 .company(entity.getCompany())
                 .title(entity.getTitle())
                 .salary(entity.getSalary())
                 .url(entity.getUrl())
+                .source(entity.getSource())
+                .salary_estimated(entity.isSalary_estimated())
                 .build();
-        database.put(id.toString(), offer);
+        database.put(id, offer);
         return (S) offer;
     }
 
     @Override
     public Optional<Offer> findById(final String id) {
+        if (!ObjectId.isValid(id)) { // Mongo constraint HexString ID check.
+            throw new InvalidOfferIdException();
+        }
         return Optional.ofNullable(database.get(id));
     }
 

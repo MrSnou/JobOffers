@@ -4,6 +4,7 @@ import com.joboffersapi.domain.offercrud.dto.AddOfferRequestDto;
 import com.joboffersapi.domain.offercrud.dto.FetchOfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
+import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
 import com.joboffersapi.domain.offercrud.exception.OfferNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -89,47 +90,11 @@ class OfferFacadeTest {
                     "to database.");
             assertThat(offerResponseDto.offerDto()).isNotNull();
             assertThat(offerResponseDto.offerDto())
-                    .extracting(OfferDto::title, OfferDto::company, OfferDto::salary, OfferDto::url)
-                    .containsExactly(offer.getTitle(), offer.getCompany(), offer.getSalary(), offer.getUrl());
+                    .extracting(OfferDto::title, OfferDto::company, OfferDto::salary, OfferDto::url, OfferDto::source)
+                    .containsExactly(offer.getTitle(), offer.getCompany(), offer.getSalary(), offer.getUrl(), offer.getSource());
             assertThat(offerFacade.findAllOffers().size()).isEqualTo(1);
         }
 
-    }
-
-    @Nested
-    @DisplayName("findOfferById - Tests")
-    class FindOfferByIdTests {
-        @Test
-        @DisplayName("Should return OfferResponseDto with message and offerDto by id.")
-        public void should_return_OfferResponseDto_with_message_and_offerDto_by_id() {
-            // Given
-            Offer offer = TestEntityFactory.anOffer();
-            OfferResponseDto addedOffer = offerFacade.addOffer(TestEntityFactory.anAddOfferRequestDto(offer));
-            // When
-            OfferResponseDto offerResponseDto = offerFacade.findOfferById(addedOffer.offerDto().id());
-            // Then
-            assertThat(offerResponseDto).isNotNull();
-            assertThat(offerResponseDto.message())
-                    .isEqualTo("Offer with id " + addedOffer.offerDto().id() + " successfully found.");
-            assertThat(offerResponseDto.offerDto()).isNotNull();
-            assertThat(offerResponseDto.offerDto())
-                    .extracting(OfferDto::title, OfferDto::salary, OfferDto::url)
-                    .containsExactly(offer.getTitle(), offer.getSalary(), offer.getUrl());
-
-        }
-
-        @Test
-        @DisplayName("Should throw OfferNotFoundException when offer with given id does not exist.")
-        public void should_throw_OfferNotFoundException_when_offer_with_given_id_does_not_exist() {
-            // Given
-            String nonExistingId = "999L";
-            // When
-            Throwable throwable = catchThrowable(() -> offerFacade.findOfferById(nonExistingId));
-            // Then
-            assertThat(throwable).hasMessage("Offer with id " + nonExistingId + " not found.")
-                    .isExactlyInstanceOf(OfferNotFoundException.class);
-
-        }
     }
 
     @Nested
@@ -181,6 +146,50 @@ class OfferFacadeTest {
                                 "OfferUrl: " + jobOffer.url() + "\n" +
                                 "Source: " + jobOffer.source() + "\n  ----------");
             }); // Just for visual purposes. :)
+        }
+
+    }
+
+    @Nested
+    @DisplayName("findOfferById - Tests")
+    class FindOfferByIdTest {
+        @Test
+        @DisplayName("Should return correct offer.")
+        public void should_return_OfferResponseDto_with_message_and_null_offerDto() {
+            // Given
+            Offer offer = TestEntityFactory.anOffer();
+            OfferResponseDto offerResponseDto = offerFacade.addOffer(TestEntityFactory.anAddOfferRequestDto(offer));
+            String offerID = offerResponseDto.offerDto().id();
+            // When
+            OfferResponseDto offerById = offerFacade.findOfferById(offerID);
+            // Then
+
+            assertThat(offerById).isNotNull();
+            assertThat(offerById.message()).isEqualTo("Offer with id " + offerID + " successfully found.");
+            assertThat(offerById.offerDto()).isEqualTo(offerResponseDto.offerDto());
+
+        }
+        @Test
+        @DisplayName("Should return OfferNotFoundException, when non existing id was given")
+        public void should_throw_OfferNotFoundException_when_non_existing_offer_id() {
+            // Given
+            String nonExistingOfferId = "123456789012345678901234";
+            // When
+            Throwable throwable = catchThrowable(() -> offerFacade.findOfferById(nonExistingOfferId));
+            // Then
+            assertThat(throwable).isExactlyInstanceOf(OfferNotFoundException.class);
+            assertThat(throwable).hasMessage("Offer with id " + nonExistingOfferId + " not found.");
+        }
+
+        @Test
+        @DisplayName("Should return IllegalArgumentException, when incorrect id was given")
+        public void should_throw_IllegalArgumentException_when_invalid_offer_id() {
+            // Given
+            // When
+            Throwable throwable = catchThrowable(() -> offerFacade.findOfferById("1234"));
+            // Then
+            assertThat(throwable).isExactlyInstanceOf(InvalidOfferIdException.class);
+            assertThat(throwable).hasMessage("Invalid offer id. Expected format: 24 characters, digits and letters a–f, e.g. 6a6a386a6a7fad2d161c487e");
         }
 
     }
