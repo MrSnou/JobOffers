@@ -4,9 +4,11 @@ import com.joboffersapi.domain.offercrud.dto.AddOfferRequestDto;
 import com.joboffersapi.domain.offercrud.dto.FetchedOffer;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
+import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
 import com.joboffersapi.domain.offercrud.exception.OfferNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,8 +61,11 @@ class OfferService {
     }
 
     OfferResponseDto findOfferById(final String id) {
-        Offer offerById = offerRepository.findById(id).
-                orElseThrow(() -> new OfferNotFoundException("Offer with id " + id + " not found."));
+        if (!ObjectId.isValid(id)) {
+            throw new InvalidOfferIdException();
+        }
+        Offer offerById = offerRepository.findById(id)
+                .orElseThrow(() -> new OfferNotFoundException(id));
         return OfferResponseDto.builder()
                 .message("Offer with id " + id + " successfully found.")
                 .offerDto(mapFromOfferToOfferDto(offerById))
