@@ -1,11 +1,11 @@
 package com.joboffersapi.domain.offercrud;
 
-import com.joboffersapi.domain.offercrud.dto.AddOfferRequestDto;
 import com.joboffersapi.domain.offercrud.dto.FetchOfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
 import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
 import com.joboffersapi.domain.offercrud.exception.OfferNotFoundException;
+import com.joboffersapi.infrastructure.offercrud.http.dto.AddOfferRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.joboffersapi.infrastructure.offercrud.http.util.HttpLayerOfferMapper.mapFromAddOfferRequestToAddOfferRequestDto;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
@@ -58,14 +59,15 @@ class OfferFacadeTest {
                     .build();
         }
 
-        static AddOfferRequestDto anAddOfferRequestDto(Offer offer) {
-            return AddOfferRequestDto.builder()
-                    .title(offer.getTitle())
-                    .company(offer.getCompany())
-                    .salary(offer.getSalary())
-                    .url(offer.getUrl())
-                    .source(offer.getSource())
-                    .salary_estimated(offer.isSalary_estimated())
+        static AddOfferRequest anAddOfferRequest() {
+            return AddOfferRequest.builder()
+                    .title(DEFAULT_OFFER_NAME)
+                    .company(DEFAULT_OFFER_COMPANY)
+                    .salaryMin(100.0)
+                    .salaryMax(200.0)
+                    .url(DEFAULT_OFFER_URL)
+                    .source(DEFAULT_SOURCE)
+                    .salary_estimated(DEFAULT_SALARY_ESTIMATED)
                     .build();
         }
 
@@ -79,19 +81,17 @@ class OfferFacadeTest {
         @DisplayName("Should return OfferResponseDto with message and offerDto.")
         public void should_return_OfferResponseDto_with_message_and_offerDto() {
             // Given
-            Offer offer = TestEntityFactory.anOffer();
-            AddOfferRequestDto addOfferRequestDto = TestEntityFactory.anAddOfferRequestDto(offer);
+            AddOfferRequest addOfferRequest = TestEntityFactory.anAddOfferRequest();
             // When
-            OfferResponseDto offerResponseDto = offerFacade.addOffer(addOfferRequestDto);
+            OfferResponseDto offerResponseDto = offerFacade.addOffer(mapFromAddOfferRequestToAddOfferRequestDto(addOfferRequest));
             assertThat(offerResponseDto).isNotNull();
-            assertThat(offerResponseDto.message()).isEqualTo("Successfully saved Offer : \n" +
-                    "Title: " + offer.getTitle() + "\n" +
-                    "Company: " + offer.getCompany() + "\n" +
-                    "to database.");
+            assertThat(offerResponseDto.message()).isEqualTo("Successfully saved Offer : Title: TestOffer | Company: TestCompany to database.");
             assertThat(offerResponseDto.offerDto()).isNotNull();
             assertThat(offerResponseDto.offerDto())
                     .extracting(OfferDto::title, OfferDto::company, OfferDto::salary, OfferDto::url, OfferDto::source)
-                    .containsExactly(offer.getTitle(), offer.getCompany(), offer.getSalary(), offer.getUrl(), offer.getSource());
+                    .containsExactly(addOfferRequest.title(), addOfferRequest.company(),
+                            String.format("%.0f - %.0f PLN", addOfferRequest.salaryMin(), addOfferRequest.salaryMax()),
+                            addOfferRequest.url(), addOfferRequest.source());
             assertThat(offerFacade.findAllOffers().size()).isEqualTo(1);
         }
 
@@ -105,13 +105,16 @@ class OfferFacadeTest {
         public void should_return_list_of_offers() {
             // Given
             for (int i = 0; i < 10; i++) {
-                Offer offer = Offer.builder()
+                AddOfferRequest addOfferRequest = AddOfferRequest.builder()
                         .title("TestOffer" + i)
                         .company("TestCompany" + i)
-                        .salary("67.67" + i)
+                        .salaryMin(100.0)
+                        .salaryMax(200.0)
                         .url("http://localhost:8080/" + i)
+                        .source("TestOfferSource" + i)
+                        .salary_estimated(true)
                         .build();
-                offerFacade.addOffer(TestEntityFactory.anAddOfferRequestDto(offer));
+                offerFacade.addOffer(mapFromAddOfferRequestToAddOfferRequestDto(addOfferRequest));
             }
             assertThat(offerFacade.findAllOffers().size()).isEqualTo(10);
             // When
@@ -158,7 +161,7 @@ class OfferFacadeTest {
         public void should_return_OfferResponseDto_with_message_and_null_offerDto() {
             // Given
             Offer offer = TestEntityFactory.anOffer();
-            OfferResponseDto offerResponseDto = offerFacade.addOffer(TestEntityFactory.anAddOfferRequestDto(offer));
+            OfferResponseDto offerResponseDto = offerFacade.addOffer(mapFromAddOfferRequestToAddOfferRequestDto(TestEntityFactory.anAddOfferRequest()));
             String offerID = offerResponseDto.offerDto().id();
             // When
             OfferResponseDto offerById = offerFacade.findOfferById(offerID);
@@ -182,8 +185,8 @@ class OfferFacadeTest {
         }
 
         @Test
-        @DisplayName("Should return IllegalArgumentException, when incorrect id was given")
-        public void should_throw_IllegalArgumentException_when_invalid_offer_id() {
+        @DisplayName("Should return InvalidOfferIdException, when incorrect id was given")
+        public void should_throw_InvalidOfferIdException_when_invalid_offer_id() {
             // Given
             // When
             Throwable throwable = catchThrowable(() -> offerFacade.findOfferById("1234"));

@@ -35,10 +35,8 @@ class OfferService {
      */
     List<OfferDto> findAllOffers() {
         log.info("OfferService | findAllOffers - fetching all offers from database and external API's.");
-        List<OfferDto> allOffers = new ArrayList<>();
         fetchAndSaveNewOffers();
-        findAllOffersFromDb().forEach(allOffers::add);
-        return allOffers;
+        return findAllOffersFromDb();
     }
 
     /**
@@ -52,12 +50,12 @@ class OfferService {
     }
 
     OfferResponseDto addOfferFromOfferRequestDto(final AddOfferRequestDto addOfferRequestDto) {
-        Offer offerToSave = mapFromJobOfferDtoToOffer(addOfferRequestDto);
+        Offer offerToSave = mapFromAddOfferRequestDtoToOffer(addOfferRequestDto);
         Offer savedOffer = offerRepository.save(offerToSave);
-        return new OfferResponseDto("Successfully saved Offer : \n" +
-                "Title: " + savedOffer.getTitle() + "\n" +
-                "Company: " + savedOffer.getCompany() + "\n" +
-                "to database.", mapFromOfferToOfferDto(savedOffer));
+        return new OfferResponseDto("Successfully saved Offer : " +
+                "Title: " + savedOffer.getTitle() +
+                " | Company: " + savedOffer.getCompany() +
+                " to database.", mapFromOfferToOfferDto(savedOffer));
     }
 
     OfferResponseDto findOfferById(final String id) {

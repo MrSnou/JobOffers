@@ -1,4 +1,4 @@
-package com.joboffersapi.infrastructure.offercrud.http.scheduler;
+package com.joboffersapi.infrastructure.offercrud.scheduler;
 
 import com.joboffersapi.domain.offercrud.OfferFacade;
 import com.joboffersapi.domain.offercrud.dto.FetchOfferResponseDto;

@@ -64,7 +64,7 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         // When && Then
         performGetWithWrongData.andExpect(status().isBadRequest()).andExpect(content().json("""
                 {
-                  "message": "Invalid offer id. Expected format: 24 characters, digits and letters a–f, e.g. 6a6a386a6a7fad2d161c487e"
+                "errors":["Invalid offer id. Expected format: 24 characters, digits and letters a–f, e.g. 6a6a386a6a7fad2d161c487e"]
                 }
                 """.trim()));
 
@@ -76,7 +76,7 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         // When && Then
         performGetNotExistingOffer.andExpect(status().isNotFound()).andExpect(content().json("""
                 {
-                  "message": "Offer with id 123456789012345678901234 not found."
+                  "errors":["Offer with id 123456789012345678901234 not found."]
                 }
                 """.trim()));
 
