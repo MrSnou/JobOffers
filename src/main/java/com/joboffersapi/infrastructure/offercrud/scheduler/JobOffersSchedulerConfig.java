@@ -1,4 +1,4 @@
-package com.joboffersapi.infrastructure.offercrud.http.scheduler;
+package com.joboffersapi.infrastructure.offercrud.scheduler;
 
 import com.joboffersapi.domain.offercrud.OfferFacade;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

@@ -18,6 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationTest {
 
+    // TODO : AddOffer endpoint tests.
+
 
     @Autowired
     OfferFetchable offerFetchable;
@@ -51,6 +53,7 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         assertThat(jobOfferFromApis).hasSize(2);
         assertThat(jobOfferFromApis).containsExactlyInAnyOrder(new FetchedOffer("Junior Java", "X", "5000 PLN", "http://x.pl", "X", false), new FetchedOffer("Mid Java", "Y", "10000 PLN", "http://y.pl", "Y", true));
 
+
         // Given && When
         ResultActions resultActions = mockMvc.perform(get("/offers").accept(MediaType.APPLICATION_JSON));
         // Then
@@ -64,7 +67,7 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         // When && Then
         performGetWithWrongData.andExpect(status().isBadRequest()).andExpect(content().json("""
                 {
-                  "message": "Invalid offer id. Expected format: 24 characters, digits and letters a–f, e.g. 6a6a386a6a7fad2d161c487e"
+                "errors":["Invalid offer id. Expected format: 24 characters, digits and letters a–f, e.g. 6a6a386a6a7fad2d161c487e"]
                 }
                 """.trim()));
 
@@ -76,7 +79,7 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         // When && Then
         performGetNotExistingOffer.andExpect(status().isNotFound()).andExpect(content().json("""
                 {
-                  "message": "Offer with id 123456789012345678901234 not found."
+                  "errors":["Offer with id 123456789012345678901234 not found."]
                 }
                 """.trim()));
 

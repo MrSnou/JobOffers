@@ -18,7 +18,7 @@ final class OfferMapper {
                 .build();
     }
 
-    static Offer mapFromJobOfferDtoToOffer(AddOfferRequestDto addOfferRequestDto) {
+    static Offer mapFromAddOfferRequestDtoToOffer(AddOfferRequestDto addOfferRequestDto) {
         return Offer.builder()
                 .title(addOfferRequestDto.title())
                 .company(addOfferRequestDto.company())
@@ -28,8 +28,7 @@ final class OfferMapper {
                 .salary_estimated(addOfferRequestDto.salary_estimated())
                 .build();
     }
-
-    public static Offer mapFromFetchedOfferToOffer(final FetchedOffer fetchedOffer) {
+    static Offer mapFromFetchedOfferToOffer(final FetchedOffer fetchedOffer) {
         return Offer.builder()
                 .title(fetchedOffer.title())
                 .company(fetchedOffer.company())

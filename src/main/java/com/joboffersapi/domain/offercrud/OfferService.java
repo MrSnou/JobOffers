@@ -10,12 +10,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.joboffersapi.domain.offercrud.OfferMapper.*;
+import static com.joboffersapi.domain.offercrud.OfferMapper.mapFromAddOfferRequestDtoToOffer;
+import static com.joboffersapi.domain.offercrud.OfferMapper.mapFromFetchedOfferToOffer;
+import static com.joboffersapi.domain.offercrud.OfferMapper.mapFromOfferToOfferDto;
 
 
 @Service
@@ -35,10 +38,8 @@ class OfferService {
      */
     List<OfferDto> findAllOffers() {
         log.info("OfferService | findAllOffers - fetching all offers from database and external API's.");
-        List<OfferDto> allOffers = new ArrayList<>();
         fetchAndSaveNewOffers();
-        findAllOffersFromDb().forEach(allOffers::add);
-        return allOffers;
+        return findAllOffersFromDb();
     }
 
     /**
@@ -51,13 +52,15 @@ class OfferService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     OfferResponseDto addOfferFromOfferRequestDto(final AddOfferRequestDto addOfferRequestDto) {
-        Offer offerToSave = mapFromJobOfferDtoToOffer(addOfferRequestDto);
+        Offer offerToSave = mapFromAddOfferRequestDtoToOffer(addOfferRequestDto);
         Offer savedOffer = offerRepository.save(offerToSave);
-        return new OfferResponseDto("Successfully saved Offer : \n" +
-                "Title: " + savedOffer.getTitle() + "\n" +
-                "Company: " + savedOffer.getCompany() + "\n" +
-                "to database.", mapFromOfferToOfferDto(savedOffer));
+
+        return new OfferResponseDto("Successfully saved Offer : " +
+                "Title: " + savedOffer.getTitle() +
+                " | Company: " + savedOffer.getCompany() +
+                " to database.", mapFromOfferToOfferDto(savedOffer));
     }
 
     OfferResponseDto findOfferById(final String id) {
@@ -79,12 +82,14 @@ class OfferService {
         log.info("OfferService | fetchAndSaveNewOffers - fetching all offers from external API.");
         List<FetchedOffer> fetchedOffers = offerFetcher.fetchOffers();
         List<Offer> newlyAdded = new ArrayList<>();
+
         for (FetchedOffer fetchedOffer : fetchedOffers) {
             Offer offer = mapFromFetchedOfferToOffer(fetchedOffer);
             if (saveOfferIfNotExist(offer)) {
                 newlyAdded.add(offer);
             }
         }
+        log.info(String.format("OfferService | fetchAndSaveNewOffers - number of new offers in database : %s/%s", newlyAdded.size(), fetchedOffers.size()));
         return newlyAdded;
     }
 
