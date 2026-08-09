@@ -6,6 +6,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
+// TODO : Default Values for salary MIN/MAX and those should not be required. validationMessages.properties.
+
 @ValidSalaryRange
 @Builder
 public record AddOfferRequest(
@@ -17,11 +19,11 @@ public record AddOfferRequest(
         @Size(min = 1, max = 50, message = "Company name have to fit into 1-50 characters range.")
         String company,
 
-        @NotNull(message = "Offer salary have to contain at least 1 character.")
+        @NotNull(message = "Offer minimal salary have to contain at least 1 character.")
         @PositiveOrZero(message = "Salary have to be positive number or zero.")
         Double salaryMin,
 
-        @NotNull(message = "Offer salary have to contain at least 1 character.")
+        @NotNull(message = "Offer maximum salary have to contain at least 1 character.")
         @PositiveOrZero(message = "Salary have to be positive number or zero.")
         Double salaryMax,
 

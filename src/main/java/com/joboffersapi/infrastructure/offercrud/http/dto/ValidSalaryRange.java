@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = SalaryRangeValidator.class)
-public @interface ValidSalaryRange {
+@interface ValidSalaryRange {
     String message() default "Maximum offered salary have to be greater or equal than minimum offered salary.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

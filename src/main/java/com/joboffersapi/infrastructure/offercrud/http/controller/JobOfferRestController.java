@@ -41,7 +41,6 @@ public class JobOfferRestController {
         return ResponseEntity.ok(offerFacade.findOfferById(id));
     }
 
-
     @GetMapping("/refreshAndGetOffers")
     public ResponseEntity<OffersListDto> refreshAndGetOffers() {
         log.info("/refreshAndGetOffers - Endpoint hit!");

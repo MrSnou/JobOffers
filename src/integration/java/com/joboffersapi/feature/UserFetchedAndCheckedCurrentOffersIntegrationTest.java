@@ -18,6 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationTest {
 
+    // TODO : AddOffer endpoint tests.
+
 
     @Autowired
     OfferFetchable offerFetchable;
@@ -50,6 +52,7 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         // Then
         assertThat(jobOfferFromApis).hasSize(2);
         assertThat(jobOfferFromApis).containsExactlyInAnyOrder(new FetchedOffer("Junior Java", "X", "5000 PLN", "http://x.pl", "X", false), new FetchedOffer("Mid Java", "Y", "10000 PLN", "http://y.pl", "Y", true));
+
 
         // Given && When
         ResultActions resultActions = mockMvc.perform(get("/offers").accept(MediaType.APPLICATION_JSON));

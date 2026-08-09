@@ -19,6 +19,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
 class OfferFacadeTest {
 
+    // TODO : AddOffer tests.
+
     private final OfferFacadeTestConfiguration offerFacadeTestConfiguration = new OfferFacadeTestConfiguration();
 
     OfferFacade offerFacade = offerFacadeTestConfiguration.getOfferFacadeForTests();

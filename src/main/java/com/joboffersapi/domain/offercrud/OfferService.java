@@ -10,12 +10,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.joboffersapi.domain.offercrud.OfferMapper.*;
+import static com.joboffersapi.domain.offercrud.OfferMapper.mapFromAddOfferRequestDtoToOffer;
+import static com.joboffersapi.domain.offercrud.OfferMapper.mapFromFetchedOfferToOffer;
+import static com.joboffersapi.domain.offercrud.OfferMapper.mapFromOfferToOfferDto;
 
 
 @Service
@@ -49,9 +52,11 @@ class OfferService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     OfferResponseDto addOfferFromOfferRequestDto(final AddOfferRequestDto addOfferRequestDto) {
         Offer offerToSave = mapFromAddOfferRequestDtoToOffer(addOfferRequestDto);
         Offer savedOffer = offerRepository.save(offerToSave);
+
         return new OfferResponseDto("Successfully saved Offer : " +
                 "Title: " + savedOffer.getTitle() +
                 " | Company: " + savedOffer.getCompany() +
@@ -77,12 +82,14 @@ class OfferService {
         log.info("OfferService | fetchAndSaveNewOffers - fetching all offers from external API.");
         List<FetchedOffer> fetchedOffers = offerFetcher.fetchOffers();
         List<Offer> newlyAdded = new ArrayList<>();
+
         for (FetchedOffer fetchedOffer : fetchedOffers) {
             Offer offer = mapFromFetchedOfferToOffer(fetchedOffer);
             if (saveOfferIfNotExist(offer)) {
                 newlyAdded.add(offer);
             }
         }
+        log.info(String.format("OfferService | fetchAndSaveNewOffers - number of new offers in database : %s/%s", newlyAdded.size(), fetchedOffers.size()));
         return newlyAdded;
     }
 
