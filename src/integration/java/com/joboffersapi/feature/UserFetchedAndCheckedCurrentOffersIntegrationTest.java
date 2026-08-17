@@ -3,11 +3,16 @@ package com.joboffersapi.feature;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.joboffersapi.BaseIntegrationTest;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
+import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OffersListDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,6 +21,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationTest {
     // TODO : Scheduler fetch mid test with new offers.
+
+    @Container
+    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+
+    @DynamicPropertySource
+    public static void propertyOverride(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     @Test
     @DisplayName("User fetched and checked current offers - Happy Path Test")
@@ -95,6 +108,21 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
                 }
                 """.trim()));
 
-
+        /// 5. User made GET request with correct offer ID, application returned status 200 with OfferDto object.
+        // Given && When
+        ResultActions getWithIdResponse = mockMvc.perform(get("/offers/" + firstOfferId)
+                .accept(MediaType.APPLICATION_JSON));
+        // Then
+        String contentAsString = getWithIdResponse.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        OfferResponseDto returnedOfferDto = objectMapper.readValue(contentAsString, OfferResponseDto.class);
+        assertThat(returnedOfferDto).isNotNull();
+        assertThat(returnedOfferDto.message()).isEqualTo(String.format("Offer with id %s successfully found.", firstOfferId));
+        assertThat(returnedOfferDto.offerDto()).isEqualTo(new OfferDto(
+                firstOfferId,
+                "Junior Java",
+                "X",
+                "5000 PLN",
+                "http://x.pl",
+                "X"));
     }
 }

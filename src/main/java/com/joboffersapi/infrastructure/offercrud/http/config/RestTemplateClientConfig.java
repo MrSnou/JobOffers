@@ -2,9 +2,13 @@ package com.joboffersapi.infrastructure.offercrud.http.config;
 
 import com.joboffersapi.domain.offercrud.OfferFetchable;
 import com.joboffersapi.infrastructure.offercrud.http.OfferFetcherRestTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
 
 
 @Configuration
@@ -16,14 +20,20 @@ public class RestTemplateClientConfig {
     }
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateResponseErrorHandler restTemplateResponseErrorHandler) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setErrorHandler(restTemplateResponseErrorHandler);
-        return restTemplate;
+    public RestTemplate restTemplate(RestTemplateResponseErrorHandler errorHandler,
+                                     RestTemplateBuilder builder,
+                                     @Value("${job_offers.api.connection-timeout}") long connectionTimeout,
+                                     @Value("${job_offers.api.read-timeout}") long readTimeout) {
+        return builder
+                .connectTimeout(Duration.ofMillis(connectionTimeout))
+                .readTimeout(Duration.ofMillis(readTimeout))
+                .errorHandler(errorHandler)
+                .build();
     }
 
     @Bean
-    public OfferFetchable offerFetchable(RestTemplate restTemplate) {
-        return new OfferFetcherRestTemplate(restTemplate);
+    public OfferFetchable offerFetchable(RestTemplate restTemplate,
+                                         @Value("${job_offers.api.base-url}") String baseUrl) {
+        return new OfferFetcherRestTemplate(restTemplate, baseUrl);
     }
 }

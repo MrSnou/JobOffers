@@ -198,4 +198,14 @@ class OfferFacadeTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("addOffer - Tests")
+    class AddOfferTest {
+        @Test
+        @DisplayName("Should return add offer and return OfferResponseClass with message and OfferDto")
+        public void should_return_OfferResponseClass_with_message_and_offerDto() {
+
+        }
+    }
 }

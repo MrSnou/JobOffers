@@ -8,8 +8,12 @@ import com.joboffersapi.infrastructure.offercrud.http.dto.AddOfferRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +26,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 class AddOfferErrorsAndSuccessTest extends BaseIntegrationTest {
+
+    @Container
+    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+
+    @DynamicPropertySource
+    public static void propertyOverride(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     @Test
     public void testAddOfferErrorsAndSuccess() throws Exception {

@@ -9,6 +9,8 @@ spring:
 job_offers:
     api:
         base-url: http://localhost:8080
+        connection-timeout: 1000
+        read-timeout: 1000
     scheduler:
         enabled: false
         time-cron: "* * * * * ?" # Every second

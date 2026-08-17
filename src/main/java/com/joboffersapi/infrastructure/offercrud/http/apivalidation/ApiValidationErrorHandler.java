@@ -1,6 +1,7 @@
 package com.joboffersapi.infrastructure.offercrud.http.apivalidation;
 
 import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
+import com.joboffersapi.domain.offercrud.exception.OfferFetchingException;
 import com.joboffersapi.domain.offercrud.exception.OfferNotFoundException;
 import com.joboffersapi.infrastructure.offercrud.http.controller.JobOfferRestController;
 import lombok.extern.log4j.Log4j2;
@@ -65,6 +66,14 @@ class ApiValidationErrorHandler {
         final List<String> errors = List.of("Offer with this URL already exists!");
         log.warn("[" +  Instant.now() +  "] ApiValidationErrorHandler | handleDuplicateKey - " + errors + " | " + ex.getMessage());
         return new ApiValidationErrorDto(errors);
+    }
+
+    @ExceptionHandler(OfferFetchingException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public ApiValidationErrorDto handleOfferFetching(OfferFetchingException ex) {
+        final List<String> errors = List.of("External offers API is currently unavailable.");
+        log.error("[" + Instant.now() + "] ApiValidationErrorHandler | handleOfferFetching - " + ex.getMessage());
+        return ApiValidationErrorDto.builder().errors(errors).build();
     }
 
 
