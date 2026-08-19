@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.joboffersapi.domain.offercrud.OfferFetchable;
 import com.joboffersapi.domain.offercrud.exception.OfferFetchingException;
-import com.joboffersapi.infrastructure.offercrud.http.OfferFetcherRestTemplate;
+import com.joboffersapi.infrastructure.offercrud.OfferFetcherRestTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

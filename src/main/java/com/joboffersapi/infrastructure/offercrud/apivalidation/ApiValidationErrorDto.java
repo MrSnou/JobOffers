@@ -1,4 +1,4 @@
-package com.joboffersapi.infrastructure.offercrud.http.apivalidation;
+package com.joboffersapi.infrastructure.offercrud.apivalidation;
 
 import lombok.Builder;
 

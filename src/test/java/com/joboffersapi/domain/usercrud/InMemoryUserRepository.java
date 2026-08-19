@@ -21,7 +21,7 @@ class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User save(final User user) {
-        db.put(UUID.fromString(user.getUsername()).toString(), user);
+        db.put(String.valueOf(UUID.randomUUID()), user);
         return user;
     }
 

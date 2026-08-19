@@ -1,4 +1,4 @@
-package com.joboffersapi.infrastructure.offercrud.http.dto;
+package com.joboffersapi.infrastructure.offercrud.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

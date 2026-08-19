@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationTest {
     // TODO : Scheduler fetch mid test with new offers.
+    // TODO : Security tests with token JWT
 
     @Container
     public static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");

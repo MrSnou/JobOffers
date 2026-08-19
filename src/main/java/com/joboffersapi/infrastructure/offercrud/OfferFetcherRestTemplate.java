@@ -1,9 +1,9 @@
-package com.joboffersapi.infrastructure.offercrud.http;
+package com.joboffersapi.infrastructure.offercrud;
 
 import com.joboffersapi.domain.offercrud.OfferFetchable;
 import com.joboffersapi.domain.offercrud.dto.FetchedOffer;
 import com.joboffersapi.domain.offercrud.exception.OfferFetchingException;
-import com.joboffersapi.infrastructure.offercrud.http.dto.JobOfferFromApi;
+import com.joboffersapi.infrastructure.offercrud.dto.JobOfferFromApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;

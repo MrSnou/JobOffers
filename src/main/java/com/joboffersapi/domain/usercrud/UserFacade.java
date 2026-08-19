@@ -1,14 +1,16 @@
 package com.joboffersapi.domain.usercrud;
 
-import com.joboffersapi.domain.usercrud.dto.LoginRequestDto;
+import com.joboffersapi.infrastructure.usercrud.dto.LoginRequestDto;
 import com.joboffersapi.domain.usercrud.dto.UserDto;
-import com.joboffersapi.domain.usercrud.dto.UserRegisterRequestDto;
+import com.joboffersapi.infrastructure.usercrud.dto.UserRegisterRequestDto;
 import com.joboffersapi.domain.usercrud.dto.UserResponseDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
-class UserFacade {
+@Log4j2
+public class UserFacade {
 
     private final UserService userService;
 

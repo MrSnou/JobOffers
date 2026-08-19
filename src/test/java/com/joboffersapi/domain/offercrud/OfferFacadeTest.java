@@ -5,7 +5,7 @@ import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
 import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
 import com.joboffersapi.domain.offercrud.exception.OfferNotFoundException;
-import com.joboffersapi.infrastructure.offercrud.http.dto.AddOfferRequest;
+import com.joboffersapi.infrastructure.offercrud.dto.AddOfferRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.joboffersapi.infrastructure.offercrud.http.util.HttpLayerOfferMapper.mapFromAddOfferRequestToAddOfferRequestDto;
+import static com.joboffersapi.infrastructure.offercrud.util.HttpLayerOfferMapper.mapFromAddOfferRequestToAddOfferRequestDto;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 

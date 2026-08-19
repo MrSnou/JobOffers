@@ -4,7 +4,7 @@ import com.joboffersapi.BaseIntegrationTest;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OffersListDto;
-import com.joboffersapi.infrastructure.offercrud.http.dto.AddOfferRequest;
+import com.joboffersapi.infrastructure.offercrud.dto.AddOfferRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.MediaType;

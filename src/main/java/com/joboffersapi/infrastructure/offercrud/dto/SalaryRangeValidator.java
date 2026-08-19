@@ -1,4 +1,4 @@
-package com.joboffersapi.infrastructure.offercrud.http.dto;
+package com.joboffersapi.infrastructure.offercrud.dto;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

@@ -1,9 +1,9 @@
-package com.joboffersapi.infrastructure.offercrud.http.apivalidation;
+package com.joboffersapi.infrastructure.offercrud.apivalidation;
 
 import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
 import com.joboffersapi.domain.offercrud.exception.OfferFetchingException;
 import com.joboffersapi.domain.offercrud.exception.OfferNotFoundException;
-import com.joboffersapi.infrastructure.offercrud.http.controller.JobOfferRestController;
+import com.joboffersapi.infrastructure.offercrud.controller.JobOfferRestController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DuplicateKeyException;

@@ -1,11 +1,11 @@
 package com.joboffersapi.domain.usercrud;
 
 import com.joboffersapi.domain.usercrud.dto.UserDto;
-import com.joboffersapi.domain.usercrud.dto.UserRegisterRequestDto;
+import com.joboffersapi.infrastructure.usercrud.dto.UserRegisterRequestDto;
 import com.joboffersapi.domain.usercrud.dto.UserResponseDto;
 import com.joboffersapi.domain.usercrud.exception.UserExistsException;
-import com.joboffersapi.domain.usercrud.exception.UserNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +23,6 @@ class UserService {
 
         User toSave = User.builder()
                 .username(requestDto.username())
-                .email(requestDto.email())
                 .password(requestDto.password())
                 .build();
         User saved = userRepository.save(toSave);
@@ -37,7 +36,7 @@ class UserService {
     UserDto findByUsername(final String username) {
         return mapFromUserToUserDto(
                 userRepository.findByUsername(username)
-                        .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found.")));
+                        .orElseThrow(() -> new BadCredentialsException("Username " + username + " not found")));
     }
 
 }
