@@ -2,13 +2,13 @@ package com.joboffersapi.infrastructure.offercrud.http;
 
 import com.joboffersapi.domain.offercrud.OfferFetchable;
 import com.joboffersapi.domain.offercrud.dto.FetchedOffer;
+import com.joboffersapi.domain.offercrud.exception.OfferFetchingException;
 import com.joboffersapi.infrastructure.offercrud.http.dto.JobOfferFromApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
@@ -19,9 +19,8 @@ import java.util.List;
 @Log4j2
 public class OfferFetcherRestTemplate implements OfferFetchable {
 
-    private final RestTemplate restTemplate;
-    @Value("${job_offers.api.base-url}")
-    private String baseUrl;
+    final private RestTemplate restTemplate;
+    final private String baseUrl;
 
     @Override
     public List<FetchedOffer> fetchOffers() {
@@ -38,14 +37,15 @@ public class OfferFetcherRestTemplate implements OfferFetchable {
                     null,
                     JobOfferFromApi[].class
             ).getBody();
-        } catch (ResponseStatusException e) {
-            throw new RuntimeException("Error while fetching data from external server!\n" +
-                    "Message: " + e.getMessage() + "\n" +
-                    "Reason: " + e.getReason() + "\n"
-                    ,e);
+        } catch (RestClientException e) {
+            log.error("Failed to fetch offers from external API: {}", e.getMessage());
+            throw new OfferFetchingException("Could not fetch offers from external API.", e);
+        }
+        if (body == null) {
+            log.warn("RestTemplate: External API returned empty body.");
+            return List.of();
         }
         log.info("RestTemplate: Successfully fetched offers from external API, number of offers fetched: {}", body.length);
-
         return Arrays.stream(body)
                 .map(JobOfferFromApi -> new FetchedOffer(
                         JobOfferFromApi.title(),
