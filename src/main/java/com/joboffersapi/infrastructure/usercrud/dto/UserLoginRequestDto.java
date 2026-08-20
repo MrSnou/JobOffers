@@ -2,7 +2,7 @@ package com.joboffersapi.infrastructure.usercrud.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record LoginRequestDto(
+public record UserLoginRequestDto(
         @NotBlank(message = "Username cannot be empty.")
         String username,
         @NotBlank(message = "Password cannot be empty.")

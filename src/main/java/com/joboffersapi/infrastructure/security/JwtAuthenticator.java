@@ -1,7 +1,7 @@
 package com.joboffersapi.infrastructure.security;
 
 import com.joboffersapi.infrastructure.usercrud.dto.JwtResponseDto;
-import com.joboffersapi.infrastructure.usercrud.dto.LoginRequestDto;
+import com.joboffersapi.infrastructure.usercrud.dto.UserLoginRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,9 +14,9 @@ public class JwtAuthenticator {
 
     private final AuthenticationManager authenticationManager;
 
-    public JwtResponseDto authenticateAndGenerateToken(LoginRequestDto loginRequestDto) {
+    public JwtResponseDto authenticateAndGenerateToken(UserLoginRequestDto userLoginRequestDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDto.username(), loginRequestDto.password()));
+                new UsernamePasswordAuthenticationToken(userLoginRequestDto.username(), userLoginRequestDto.password()));
         return JwtResponseDto.builder().build();
     }
 
