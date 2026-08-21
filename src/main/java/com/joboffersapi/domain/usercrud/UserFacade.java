@@ -1,6 +1,5 @@
 package com.joboffersapi.domain.usercrud;
 
-import com.joboffersapi.domain.usercrud.dto.LoginRequest;
 import com.joboffersapi.domain.usercrud.dto.RegisterRequest;
 import com.joboffersapi.domain.usercrud.dto.UserDto;
 import com.joboffersapi.domain.usercrud.dto.UserResponseDto;
@@ -12,12 +11,6 @@ import lombok.extern.log4j.Log4j2;
 public class UserFacade {
 
     private final UserService userService;
-
-    public UserResponseDto login(LoginRequest requestDto) {
-        // Implement login logic here, e.g., authenticate user and return a response
-        // For now, we can return a placeholder response
-        return null;
-    }
 
     public UserResponseDto register(RegisterRequest requestDto) {
         return userService.registerUser(requestDto);

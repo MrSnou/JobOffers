@@ -7,13 +7,13 @@ import lombok.Builder;
 
 @Builder
 public record UserRegisterRequestDto(
-        @NotEmpty
-        @NotNull
-        @Size(min = 3, max = 30)
+        @NotEmpty(message = "Username cannot be empty.")
+        @NotNull(message = "Username cannot be empty.")
+        @Size(min = 3, max = 30, message = "Username size have to be between 3 and 30 characters.")
         String username,
 
-        @NotEmpty
-        @NotNull
-        @Size(min = 6, max = 50)
+        @NotEmpty(message = "Password cannot be empty.")
+        @NotNull(message = "Password cannot be empty.")
+        @Size(min = 6, max = 50, message = "Password size have to be between 6 and 50 characters.")
         String password) {
 }

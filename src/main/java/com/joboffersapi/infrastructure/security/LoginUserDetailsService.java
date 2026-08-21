@@ -7,12 +7,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 
 @AllArgsConstructor
-@Component
 public class LoginUserDetailsService implements UserDetailsService {
 
     private final UserFacade userFacade;

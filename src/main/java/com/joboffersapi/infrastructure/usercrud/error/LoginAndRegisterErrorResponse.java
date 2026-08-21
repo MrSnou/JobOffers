@@ -1,4 +1,9 @@
 package com.joboffersapi.infrastructure.usercrud.error;
 
-record LoginAndRegisterErrorResponse(String message) {
+import lombok.Builder;
+
+import java.util.List;
+
+@Builder
+record LoginAndRegisterErrorResponse(List<String> errors ) {
 }

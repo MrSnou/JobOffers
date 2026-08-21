@@ -1,7 +1,8 @@
 package com.joboffersapi.infrastructure.usercrud;
 
 import com.joboffersapi.domain.usercrud.UserFacade;
-import com.joboffersapi.infrastructure.security.TokenGenerator;
+import com.joboffersapi.infrastructure.security.JwtAuthenticator;
+import com.joboffersapi.infrastructure.usercrud.dto.JwtResponseDto;
 import com.joboffersapi.infrastructure.usercrud.dto.UserLoginRequestDto;
 import com.joboffersapi.infrastructure.usercrud.dto.UserRegisterRequestDto;
 import jakarta.validation.Valid;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.joboffersapi.infrastructure.usercrud.util.UserCrudMapper.mapFromUserLoginRequestDtoToLoginRequest;
 import static com.joboffersapi.infrastructure.usercrud.util.UserCrudMapper.mapFromUserRegisterRequestDtoToRegisterRequest;
 
 @RestController
@@ -22,21 +22,19 @@ import static com.joboffersapi.infrastructure.usercrud.util.UserCrudMapper.mapFr
 public class LoginAndRegisterController {
 
     UserFacade userFacade;
-    TokenGenerator tokenGenerator;
+    JwtAuthenticator jwtAuthenticator;
 
-    @PostMapping("/token")
-    public ResponseEntity<String> authenticateAndGenerateToken(@Valid @RequestBody UserLoginRequestDto loginRequest) {
-        userFacade.login(mapFromUserLoginRequestDtoToLoginRequest(loginRequest));
-        return ResponseEntity.ok("Successfully logged in");
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponseDto> login(@Valid @RequestBody UserLoginRequestDto loginRequest) {
+        return ResponseEntity.ok(jwtAuthenticator.authenticateAndGenerateToken(loginRequest));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid UserRegisterRequestDto userRegisterRequestDto) {
+    public ResponseEntity<String> register(@Valid @RequestBody UserRegisterRequestDto userRegisterRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
                         userFacade.register(mapFromUserRegisterRequestDtoToRegisterRequest(
                                 userRegisterRequestDto)).message());
     }
-
 
 }

@@ -1,4 +1,4 @@
-package com.joboffersapi.infrastructure.offercrud.apivalidation;
+package com.joboffersapi.infrastructure.offercrud.error;
 
 import com.joboffersapi.domain.offercrud.exception.InvalidOfferIdException;
 import com.joboffersapi.domain.offercrud.exception.OfferFetchingException;
