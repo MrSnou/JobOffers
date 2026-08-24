@@ -3,7 +3,6 @@ package com.joboffersapi.infrastructure.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +17,14 @@ public class TokenGenerator {
 
     private final Clock clock;
 
-    @Value("${job_offers.security.secret-key}")
-    private String SECRET_KEY;
-    @Value("${job_offers.security.token-expiration-ms}")
-    private Long expirationTime;
+    private final JwtConfigurationProperties jwtConfigurationProperties;
 
 
     public String generateToken(UserDetails user) {
-        Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+        Algorithm algorithm = Algorithm.HMAC256(jwtConfigurationProperties.secretKey());
         Instant issuedAt = LocalDateTime.now(clock).toInstant(ZoneOffset.UTC);
-        Instant expiresAt = issuedAt.plusSeconds(expirationTime);
-        String issuer = "JobOffersAPI";
+        Instant expiresAt = issuedAt.plusSeconds(jwtConfigurationProperties.expirationTimeInSeconds());
+        String issuer = jwtConfigurationProperties.issuer();
         return JWT.create()
                 .withSubject(user.getUsername())
                 .withIssuedAt(issuedAt)

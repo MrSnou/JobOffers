@@ -13,11 +13,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @AllArgsConstructor
 class SecurityConfig {
+
+    private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
@@ -40,7 +43,7 @@ class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-//        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
 
 
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
@@ -54,6 +57,7 @@ class SecurityConfig {
                 .requestMatchers("/login").permitAll()
                 .anyRequest().authenticated()
         );
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

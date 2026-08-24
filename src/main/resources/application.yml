@@ -25,7 +25,10 @@ job_offers:
     scheduler:
         enabled: true
         time-cron: "0 0 0 * * ?" # Every day at midnight
-    security:
-        token-expiration-ms: 720 # 720 sec = 10 minutes
-        secret-key: "Jeszcze_brak_klucza,_więc_brak_ścieżki_do_pliku._:P"
+
+auth:
+    jwt:
+        secret-key: ${JWT_SECRET}
+        issuer: "JobOffersApi - Backend"
+        expiration-time-in-seconds: 720
 
