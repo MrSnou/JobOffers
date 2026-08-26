@@ -5,38 +5,54 @@ import com.joboffersapi.BaseIntegrationTest;
 import com.joboffersapi.domain.offercrud.dto.OfferDto;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OffersListDto;
+import com.joboffersapi.infrastructure.usercrud.dto.JwtResponseDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationTest {
     // TODO : Scheduler fetch mid test with new offers.
-    // TODO : Security tests with token JWT
 
-    @Container
-    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+    private static String token;
 
-    @DynamicPropertySource
-    public static void propertyOverride(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    @BeforeEach
+    void authenticate() throws Exception {
+        mockMvc.perform(post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"username":"testUser","password":"testPass123"}
+                    """))
+                .andExpect(status().isCreated());
+
+        MvcResult result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                    {"username":"testUser","password":"testPass123"}
+                    """))
+                .andReturn();
+
+        token = objectMapper.readValue(
+                result.getResponse().getContentAsString(), JwtResponseDto.class).token();
     }
 
     @Test
     @DisplayName("User fetched and checked current offers - Happy Path Test")
-    void HappyPath() throws Exception {
-        /// 1. User after login (Not Implemented yet) trying to fetch for all offers from API, should return 0 offers.
+    void happyPath() throws Exception {
+        /// 1. User after login trying to fetch for all offers from API, should return 0 offers.
         // Given && When
-        ResultActions firstTimeEmptyFetch = mockMvc.perform(get("/offers").accept(MediaType.APPLICATION_JSON));
+        ResultActions firstTimeEmptyFetch = mockMvc
+                .perform(get("/offers")
+                        .header("Authorization", "Bearer " + token)
+                        .accept(MediaType.APPLICATION_JSON));
         // Then
         firstTimeEmptyFetch.andExpect(status().isOk());
         OffersListDto offersEndpointResponseBody = objectMapper.readValue
@@ -62,23 +78,34 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
                 ]
                 """.trim())));
         // When
-        ResultActions refreshedOffersResponse = mockMvc.perform(get("/offers/refreshAndGetOffers").accept(MediaType.APPLICATION_JSON));
+        ResultActions refreshedOffersResponse = mockMvc.perform(get("/offers/refreshAndGetOffers")
+                .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON));
         // Then
         refreshedOffersResponse.andExpect(status().isOk());
         OffersListDto offersStateAfterRefreshResponse = objectMapper.readValue(refreshedOffersResponse.andReturn().getResponse().getContentAsString(), OffersListDto.class);
         assertThat(offersStateAfterRefreshResponse.offers().size()).isEqualTo(2);
-        String firstOfferId = offersStateAfterRefreshResponse.offers().get(0).id();
-        String secondOfferId = offersStateAfterRefreshResponse.offers().get(1).id();
+        String juniorJavaId = offersStateAfterRefreshResponse.offers().stream()
+                .filter(offer -> offer.url().equals("http://x.pl"))
+                .findFirst()
+                .orElseThrow()
+                .id();
+
+        String midJavaId = offersStateAfterRefreshResponse.offers().stream()
+                .filter(offer -> offer.url().equals("http://y.pl"))
+                .findFirst()
+                .orElseThrow()
+                .id();
         assertThat(offersStateAfterRefreshResponse.offers()).containsExactlyInAnyOrder(
                 new OfferDto(
-                        firstOfferId,
+                        juniorJavaId,
                         "Junior Java",
                         "X",
                         "5000 PLN",
                         "http://x.pl",
                         "X"),
                 new OfferDto(
-                        secondOfferId,
+                        midJavaId,
                         "Mid Java",
                         "Y",
                         "10000 PLN",
@@ -89,7 +116,8 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         /// then application returned HttpStatus 400, wrong ID (InvalidOfferIdException.class).
 
         // Given
-        ResultActions performGetWithWrongData = mockMvc.perform(get("/offers/123"));
+        ResultActions performGetWithWrongData = mockMvc.perform(get("/offers/123")
+                .header("Authorization", "Bearer " + token));
         // When && Then
         performGetWithWrongData.andExpect(status().isBadRequest()).andExpect(content().json("""
                 {
@@ -101,7 +129,8 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
         /// 4. User made GET request with correct 24-letters/digits to /offers endpoint, but there is no entity in DB with this ID,
         /// then application returned HttpStatus 404, offer not found.
         // Given
-        ResultActions performGetNotExistingOffer = mockMvc.perform(get("/offers/123456789012345678901234"));
+        ResultActions performGetNotExistingOffer = mockMvc.perform(get("/offers/123456789012345678901234")
+                .header("Authorization", "Bearer " + token));
         // When && Then
         performGetNotExistingOffer.andExpect(status().isNotFound()).andExpect(content().json("""
                 {
@@ -111,15 +140,19 @@ class UserFetchedAndCheckedCurrentOffersIntegrationTest extends BaseIntegrationT
 
         /// 5. User made GET request with correct offer ID, application returned status 200 with OfferDto object.
         // Given && When
-        ResultActions getWithIdResponse = mockMvc.perform(get("/offers/" + firstOfferId)
+        ResultActions getWithIdResponse = mockMvc.perform(get("/offers/" + juniorJavaId)
+                .header("Authorization", "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON));
         // Then
-        String contentAsString = getWithIdResponse.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        String contentAsString = getWithIdResponse
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
         OfferResponseDto returnedOfferDto = objectMapper.readValue(contentAsString, OfferResponseDto.class);
-        assertThat(returnedOfferDto).isNotNull();
-        assertThat(returnedOfferDto.message()).isEqualTo(String.format("Offer with id %s successfully found.", firstOfferId));
+
+        assertThat(returnedOfferDto.message())
+                .isEqualTo(String.format("Offer with id %s successfully found.", juniorJavaId));
         assertThat(returnedOfferDto.offerDto()).isEqualTo(new OfferDto(
-                firstOfferId,
+                juniorJavaId,
                 "Junior Java",
                 "X",
                 "5000 PLN",
