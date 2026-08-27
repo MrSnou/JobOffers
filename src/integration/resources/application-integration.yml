@@ -14,3 +14,9 @@ job_offers:
     scheduler:
         enabled: false
         time-cron: "* * * * * ?" # Every second
+
+auth:
+    jwt:
+        secret-key: test-secret-key-for-integration-tests
+        issuer: "JobOffersApi - Backend"
+        expiration-time-in-seconds: 720
