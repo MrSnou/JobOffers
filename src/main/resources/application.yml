@@ -26,3 +26,9 @@ job_offers:
         enabled: true
         time-cron: "0 0 0 * * ?" # Every day at midnight
 
+auth:
+    jwt:
+        secret-key: ${JWT_SECRET}
+        issuer: "JobOffersApi - Backend"
+        expiration-time-in-seconds: 720
+

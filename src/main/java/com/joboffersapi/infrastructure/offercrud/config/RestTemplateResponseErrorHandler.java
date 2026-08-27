@@ -1,4 +1,4 @@
-package com.joboffersapi.infrastructure.offercrud.http.config;
+package com.joboffersapi.infrastructure.offercrud.config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;

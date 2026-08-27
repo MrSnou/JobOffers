@@ -1,7 +1,7 @@
-package com.joboffersapi.infrastructure.offercrud.http.util;
+package com.joboffersapi.infrastructure.offercrud.util;
 
 import com.joboffersapi.domain.offercrud.dto.AddOfferRequestDto;
-import com.joboffersapi.infrastructure.offercrud.http.dto.AddOfferRequest;
+import com.joboffersapi.infrastructure.offercrud.dto.AddOfferRequest;
 
 public final class HttpLayerOfferMapper {
 

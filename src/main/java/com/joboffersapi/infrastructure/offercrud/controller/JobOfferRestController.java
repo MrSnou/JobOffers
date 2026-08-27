@@ -1,9 +1,9 @@
-package com.joboffersapi.infrastructure.offercrud.http.controller;
+package com.joboffersapi.infrastructure.offercrud.controller;
 
 import com.joboffersapi.domain.offercrud.OfferFacade;
 import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OffersListDto;
-import com.joboffersapi.infrastructure.offercrud.http.dto.AddOfferRequest;
+import com.joboffersapi.infrastructure.offercrud.dto.AddOfferRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.joboffersapi.infrastructure.offercrud.http.util.HttpLayerOfferMapper.mapFromAddOfferRequestToAddOfferRequestDto;
+import static com.joboffersapi.infrastructure.offercrud.util.HttpLayerOfferMapper.mapFromAddOfferRequestToAddOfferRequestDto;
 
 
 @RestController

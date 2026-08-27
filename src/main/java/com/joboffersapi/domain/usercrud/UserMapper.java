@@ -14,7 +14,7 @@ class UserMapper {
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .email(user.getEmail())
+                .password(user.getPassword())
                 .build();
     }
 
@@ -22,7 +22,7 @@ class UserMapper {
      * Maps a UserDto to a User object.
      * Note: The password field is not included in the UserDto, so it will not be set in the User object.
      *
-     * @mapped User object with ID, USERNAME, EMAIL rest of the fields have null value!
+     * @mapped User object with ID, USERNAME, PASSWORD rest of the fields have null value!
      * @param userDto the UserDto to map.
      * @return the mapped User object.
      */
@@ -30,7 +30,7 @@ class UserMapper {
         return User.builder()
                 .id(userDto.id())
                 .username(userDto.username())
-                .email(userDto.email())
+                .password(userDto.password())
                 .build();
     }
 }

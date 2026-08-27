@@ -5,12 +5,13 @@ import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.joboffersapi.domain.offercrud.OfferFetchable;
 import com.joboffersapi.domain.offercrud.exception.OfferFetchingException;
-import com.joboffersapi.infrastructure.offercrud.http.OfferFetcherRestTemplate;
+import com.joboffersapi.infrastructure.offercrud.OfferFetcherRestTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +23,8 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
+
+@AutoConfigureMockMvc(addFilters = false)
 class OfferHttpClientIntegrationTest {
 
     @RegisterExtension

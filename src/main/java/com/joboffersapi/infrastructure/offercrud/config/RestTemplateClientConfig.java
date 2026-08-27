@@ -1,7 +1,7 @@
-package com.joboffersapi.infrastructure.offercrud.http.config;
+package com.joboffersapi.infrastructure.offercrud.config;
 
 import com.joboffersapi.domain.offercrud.OfferFetchable;
-import com.joboffersapi.infrastructure.offercrud.http.OfferFetcherRestTemplate;
+import com.joboffersapi.infrastructure.offercrud.OfferFetcherRestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

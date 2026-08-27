@@ -1,24 +1,18 @@
 package com.joboffersapi.domain.usercrud;
 
-import com.joboffersapi.domain.usercrud.dto.LoginRequestDto;
+import com.joboffersapi.domain.usercrud.dto.RegisterRequest;
 import com.joboffersapi.domain.usercrud.dto.UserDto;
-import com.joboffersapi.domain.usercrud.dto.UserRegisterRequestDto;
 import com.joboffersapi.domain.usercrud.dto.UserResponseDto;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
-class UserFacade {
+@Log4j2
+public class UserFacade {
 
     private final UserService userService;
 
-    public UserResponseDto login(LoginRequestDto requestDto) {
-        // Implement login logic here, e.g., authenticate user and return a response
-        // For now, we can return a placeholder response
-        return null;
-    }
-
-    public UserResponseDto register(@Valid UserRegisterRequestDto requestDto) {
+    public UserResponseDto register(RegisterRequest requestDto) {
         return userService.registerUser(requestDto);
     }
 
