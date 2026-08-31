@@ -45,6 +45,9 @@ class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+
+
+
         http.exceptionHandling(e -> e.authenticationEntryPoint((req, res, ex) -> {
             res.setStatus(HttpStatus.UNAUTHORIZED.value());
             res.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -53,7 +56,7 @@ class SecurityConfig {
             """);
         }));
 
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 // Swagger Endpoints
@@ -66,6 +69,8 @@ class SecurityConfig {
                 .requestMatchers("/login").permitAll()
                 .anyRequest().authenticated()
         );
+
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

@@ -1,6 +1,16 @@
 server:
     port: 8080
 
+job-offers:
+    api:
+        base-url: https://fake-java-offers-api.onrender.com
+        connection-timeout: 5000
+        read-timeout: 5000
+
+    scheduler:
+        enabled: true
+        time-cron: "0 0 0 * * ?" # Every day at midnight
+
 spring:
     application:
         name: jobOffers
@@ -17,18 +27,19 @@ spring:
         authentication-database: job-offers-api
 
 
-job_offers:
-    api:
-        base-url: http://ec2-18-194-181-208.eu-central-1.compute.amazonaws.com:5057
-        connection-timeout: 5000
-        read-timeout: 5000
-    scheduler:
-        enabled: true
-        time-cron: "0 0 0 * * ?" # Every day at midnight
+    cache:
+        type: redis
+        redis:
+            time-to-live: 5 # Time in minutes
+
+    redis:
+        host: ${REDIS_HOST:localhost}
+        port: ${REDIS_PORT:63792}
 
 auth:
     jwt:
         secret-key: ${JWT_SECRET}
         issuer: "JobOffersApi - Backend"
         expiration-time-in-seconds: 720
+
 

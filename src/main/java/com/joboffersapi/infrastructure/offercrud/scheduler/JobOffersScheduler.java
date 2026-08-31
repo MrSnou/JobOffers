@@ -20,7 +20,7 @@ class JobOffersScheduler {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
 
-    @Scheduled(cron = "${job_offers.scheduler.time-cron}")
+    @Scheduled(cron = "${job-offers.scheduler.time-cron}")
     public OfferListResponseDto fetchJobOffers() {
         log.info("Scheduler started: Fetching job offers from external APIs {}", dateFormat.format(new Date()));
         FetchOfferResponseDto fetchOfferResponseDto = offerFacade.fetchAllOffersAndSaveIfNotExists();

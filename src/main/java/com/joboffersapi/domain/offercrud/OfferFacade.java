@@ -7,6 +7,7 @@ import com.joboffersapi.domain.offercrud.dto.OfferResponseDto;
 import com.joboffersapi.domain.offercrud.dto.OffersListDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class OfferFacade {
         return offerService.findOfferById(id);
     }
 
+    @Cacheable("jobOffers")
     public List<OfferDto> findAllOffers() {
         return offerService.findAllOffersFromDb();
     }
