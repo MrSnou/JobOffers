@@ -30,7 +30,7 @@ spring:
     cache:
         type: redis
         redis:
-            time-to-live: 5 # Time in minutes
+            time-to-live: 300 # Time in seconds
 
     redis:
         host: ${REDIS_HOST:localhost}

@@ -1,4 +1,8 @@
 spring:
+    cache:
+        type: none
+        redis:
+            time-to-live: 2 # Time in minutes
     application:
         name: jobOffers
     data:
