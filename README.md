@@ -83,8 +83,3 @@ mvn spring-boot:run
 ```
 
 Swagger UI: `http://localhost:8081/swagger-ui.html`
-
-## Roadmap
-
-- [ ] Spring Security configuration + JWT authentication flow
-- [ ] Redis cache for offer queries
