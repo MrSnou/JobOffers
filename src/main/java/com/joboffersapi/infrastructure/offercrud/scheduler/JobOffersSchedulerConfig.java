@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-@ConditionalOnProperty(name="job_offers.scheduler.enabled", havingValue = "true")
+@ConditionalOnProperty(name="job-offers.scheduler.enabled", havingValue = "true")
 class JobOffersSchedulerConfig {
 
     @Bean

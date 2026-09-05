@@ -21,9 +21,9 @@ public class RestTemplateClientConfig {
 
     @Bean
     public RestTemplate restTemplate(RestTemplateResponseErrorHandler errorHandler,
-                                     RestTemplateBuilder builder,
-                                     @Value("${job_offers.api.connection-timeout}") long connectionTimeout,
-                                     @Value("${job_offers.api.read-timeout}") long readTimeout) {
+                                     @Value("${job-offers.api.connection-timeout}") long connectionTimeout,
+                                     @Value("${job-offers.api.read-timeout}") long readTimeout) {
+        RestTemplateBuilder builder = new RestTemplateBuilder();
         return builder
                 .connectTimeout(Duration.ofMillis(connectionTimeout))
                 .readTimeout(Duration.ofMillis(readTimeout))
@@ -33,7 +33,7 @@ public class RestTemplateClientConfig {
 
     @Bean
     public OfferFetchable offerFetchable(RestTemplate restTemplate,
-                                         @Value("${job_offers.api.base-url}") String baseUrl) {
+                                         @Value("${job-offers.api.base-url}") String baseUrl) {
         return new OfferFetcherRestTemplate(restTemplate, baseUrl);
     }
 }
